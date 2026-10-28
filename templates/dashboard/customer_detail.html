@@ -1,0 +1,51 @@
+{% extends "dashboard/base.html" %}
+{% load store %}
+{% block dash_title %}{{ customer.get_full_name }}{% endblock %}
+{% block crumbs %}<a href="{% url 'dashboard:customers' %}" class="mb-1 inline-flex items-center gap-1 text-sm text-ink-soft hover:text-ink"><i class="ph ph-arrow-left" aria-hidden="true"></i>Clientes</a>{% endblock %}
+{% block heading %}{{ customer.get_full_name|default:customer.email }}{% endblock %}
+{% block subheading %}<p class="mt-1 text-sm text-ink-soft">Cliente desde {{ customer.date_joined|date:"F Y" }}</p>{% endblock %}
+
+{% block dash %}
+<div class="grid gap-6 xl:grid-cols-3">
+  <div class="min-w-0 space-y-6 xl:col-span-2">
+    <dl class="grid grid-cols-3 gap-px overflow-hidden rounded-sm border border-line bg-line">
+      <div class="bg-surface p-4"><dt class="text-sm text-ink-soft">Pedidos</dt><dd class="mt-1 text-2xl font-semibold">{{ order_count }}</dd></div>
+      <div class="bg-surface p-4"><dt class="text-sm text-ink-soft">Total comprado</dt><dd class="mt-1 text-2xl font-semibold">{{ spent|money }}</dd></div>
+      <div class="bg-surface p-4"><dt class="text-sm text-ink-soft">Ticket promedio</dt><dd class="mt-1 text-2xl font-semibold">{{ avg|money }}</dd></div>
+    </dl>
+
+    <section class="panel overflow-hidden" aria-labelledby="o-title">
+      <h2 id="o-title" class="px-5 pt-5 pb-3 font-semibold">Pedidos de este cliente</h2>
+      <div class="overflow-x-auto">
+        <table class="data-table">
+          <thead><tr><th scope="col">Pedido</th><th scope="col" class="hidden sm:table-cell">Fecha</th><th scope="col" class="num hidden sm:table-cell">Artículos</th><th scope="col">Estado</th><th scope="col" class="num">Total</th></tr></thead>
+          <tbody>
+            {% for o in orders %}
+              <tr>
+                <td><a href="{% url 'dashboard:order' o.pk %}" class="font-semibold whitespace-nowrap hover:underline">{{ o.number }}</a></td>
+                <td class="hidden sm:table-cell whitespace-nowrap text-ink-soft">{{ o.created_at|date:"j M Y" }}</td>
+                <td class="num hidden sm:table-cell">{{ o.units|default:0 }}</td>
+                <td><span class="badge tone-{{ o.status|status_tone }}">{{ o.get_status_display }}</span></td>
+                <td class="num font-medium">{{ o.total|money }}</td>
+              </tr>
+            {% empty %}
+              <tr><td colspan="5" class="py-10 text-center text-ink-soft">Este cliente todavía no ha comprado.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <section class="panel h-fit p-5 text-sm" aria-labelledby="c-title">
+    <h2 id="c-title" class="font-semibold">Datos de contacto</h2>
+    <dl class="mt-4 space-y-3">
+      <div><dt class="text-ink-soft">Correo</dt><dd><a href="mailto:{{ customer.email }}" class="link">{{ customer.email }}</a></dd></div>
+      {% with p=customer.profile %}
+      <div><dt class="text-ink-soft">Teléfono</dt><dd>{{ p.phone|default:"Sin registrar" }}</dd></div>
+      <div><dt class="text-ink-soft">Dirección</dt><dd>{% if p.address %}{{ p.address }}<br>{{ p.district }}, {{ p.get_province_display }}{% else %}Sin registrar{% endif %}</dd></div>
+      {% endwith %}
+    </dl>
+  </section>
+</div>
+{% endblock %}

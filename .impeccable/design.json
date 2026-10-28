@@ -1,0 +1,177 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-06T00:00:00Z",
+  "title": "Design System: Nota Alta",
+  "extensions": {
+    "colorMeta": {
+      "ground": { "role": "neutral", "displayName": "Niebla fría", "canonical": "#f1f2ee", "tonalRamp": ["#0b0b09", "#242421", "#3f403d", "#5d5e5b", "#7d7e7a", "#9e9f9b", "#c4c4c1", "#eeefeb"] },
+      "surface": { "role": "neutral", "displayName": "Superficie", "canonical": "#fafaf8", "tonalRamp": ["#0b0b0a", "#242423", "#40403e", "#5e5e5c", "#7d7d7b", "#9e9e9d", "#c4c4c2", "#eeeeec"] },
+      "paper": { "role": "neutral", "displayName": "Papel", "canonical": "#ffffff" },
+      "sage": { "role": "neutral", "displayName": "Salvia", "canonical": "#e4e8e1", "tonalRamp": ["#0a0c08", "#222520", "#3e413b", "#5b5f59", "#7b7f78", "#9ca099", "#c2c6bf", "#ecf0e9"] },
+      "line": { "role": "neutral", "displayName": "Filete", "canonical": "#d5dad2", "tonalRamp": ["#090c07", "#22251f", "#3d413b", "#5b5f58", "#7a7f78", "#9ba099", "#c1c6be", "#ebf0e8"] },
+      "line-strong": { "role": "neutral", "displayName": "Filete fuerte", "canonical": "#7e8983", "tonalRamp": ["#060d09", "#1d2622", "#39423d", "#56605b", "#75807a", "#96a29b", "#bcc7c1", "#e6f2eb"] },
+      "ink": { "role": "neutral", "displayName": "Tinta pino", "canonical": "#1c2622", "tonalRamp": ["#050d0a", "#1d2723", "#38433e", "#55615c", "#75807b", "#95a29d", "#bbc8c2", "#e5f2ec"] },
+      "ink-soft": { "role": "neutral", "displayName": "Tinta suave", "canonical": "#56625c", "tonalRamp": ["#050e09", "#1c2722", "#37433d", "#55615b", "#74817a", "#95a29b", "#bac8c1", "#e4f2eb"] },
+      "ink-faint": { "role": "neutral", "displayName": "Tinta tenue", "canonical": "#6b7770" },
+      "pine": { "role": "primary", "displayName": "Pino de campo", "canonical": "#23463c", "tonalRamp": ["#001109", "#062b22", "#25483d", "#43665b", "#62867b", "#82a89c", "#a7cec1", "#d4f8ec"] },
+      "pine-deep": { "role": "primary", "displayName": "Pino profundo", "canonical": "#183229" },
+      "pine-tint": { "role": "primary", "displayName": "Pino velado", "canonical": "#dce7e1" },
+      "on-pine-soft": { "role": "primary", "displayName": "Salvia sobre pino", "canonical": "#c9d8d0" },
+      "sale": { "role": "secondary", "displayName": "Caqui persimón", "canonical": "#b8431f", "tonalRamp": ["#360000", "#5a0000", "#7e0000", "#a32f03", "#c95330", "#f07552", "#f3b2a0", "#ffe6dc"] },
+      "sale-deep": { "role": "secondary", "displayName": "Caqui profundo", "canonical": "#a63b1a" },
+      "sale-tint": { "role": "secondary", "displayName": "Caqui velado", "canonical": "#f6e3da" },
+      "warn": { "role": "tertiary", "displayName": "Ámbar de aviso", "canonical": "#7a4e00", "tonalRamp": ["#210000", "#3f1700", "#5f3400", "#7f5309", "#a17333", "#c49456", "#e5bc8a", "#ffebd2"] },
+      "warn-tint": { "role": "tertiary", "displayName": "Ámbar velado", "canonical": "#fbefd6" },
+      "danger": { "role": "tertiary", "displayName": "Rojo de error", "canonical": "#a1271b", "tonalRamp": ["#360000", "#5b0000", "#800000", "#a52b1f", "#cb4f40", "#f17260", "#f4b1a6", "#ffe5df"] },
+      "danger-tint": { "role": "tertiary", "displayName": "Rojo velado", "canonical": "#fde7e4" },
+      "info": { "role": "tertiary", "displayName": "Azul de información", "canonical": "#284866", "tonalRamp": ["#000b24", "#052641", "#224260", "#406180", "#5f81a2", "#7fa2c5", "#a4c8ec", "#daf2ff"] },
+      "info-tint": { "role": "tertiary", "displayName": "Azul velado", "canonical": "#e3ebf3" },
+      "success": { "role": "tertiary", "displayName": "Verde de éxito", "canonical": "#1f5137", "tonalRamp": ["#001301", "#002e16", "#184b31", "#386a4e", "#588a6d", "#79ac8e", "#9ed2b3", "#d9f7e4"] },
+      "success-tint": { "role": "tertiary", "displayName": "Verde velado", "canonical": "#ddefe3" }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Solo el titular del hero de Inicio." },
+      "headline": { "displayName": "Headline", "purpose": "H1 de página y titular de la banda de promoción (2.25rem, 3rem desde sm)." },
+      "section": { "displayName": "Section", "purpose": "H2 de sección en la tienda (1.875rem, 2.25rem desde sm)." },
+      "title": { "displayName": "Title", "purpose": "Nombre de producto en tarjeta y títulos de bloque (15 a 16px)." },
+      "body": { "displayName": "Body", "purpose": "Texto general." },
+      "lede": { "displayName": "Lede", "purpose": "Subtítulos de hero y de sección, 42 a 60ch." },
+      "label": { "displayName": "Label", "purpose": "Etiquetas de formulario y botones pequeños." },
+      "meta": { "displayName": "Meta", "purpose": "Marca sobre el nombre y línea de especificaciones, en tinta suave." },
+      "badge": { "displayName": "Badge", "purpose": "Insignias, tonos de estado y encabezados de tabla." }
+    },
+    "shadows": [
+      { "name": "float", "value": "0 6px 16px -6px rgb(28 38 34 / 0.2), 0 1px 3px rgb(28 38 34 / 0.08)", "purpose": "Solo hojas laterales (dialog) y toasts. Velo de tinta al 45% detrás de las hojas." }
+    ],
+    "motion": [
+      { "name": "ease-out-expo", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Curva única para transiciones de estado y entradas." },
+      { "name": "state", "value": "200ms ease-out-expo", "purpose": "Color, borde y desplazamiento de 1px en botones." },
+      { "name": "reveal", "value": "1100ms; clip-path inset(18% 0 0 0) a inset(0); scale 1.06 a 1", "purpose": "Revelación de la foto del hero. Una vez por página." },
+      { "name": "rise", "value": "700ms; opacity 0 a 1, translateY 14px a 0", "purpose": "Texto y botones del hero, escalonados 0/90/160ms; toasts a 420ms." },
+      { "name": "sheet-in", "value": "380ms; translateX desde el borde", "purpose": "Entrada de hojas laterales." },
+      { "name": "reduced-motion", "value": "1ms", "purpose": "Toda animación y transición se colapsa bajo prefers-reduced-motion." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1280px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Botón primario",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Acción principal (Comprar, Agregar en detalle, Finalizar compra). Campo pino, 2px.",
+      "html": "<button class=\"ds-btn ds-btn-primary\">Comprar perfumes<svg width=\"16\" height=\"16\" viewBox=\"0 0 256 256\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z\"/></svg></button>",
+      "css": ".ds-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 44px; padding: 0 20px; border-radius: 2px; border: 0; font-family: 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif; font-feature-settings: 'ss01'; font-size: 15px; font-weight: 500; white-space: nowrap; cursor: pointer; transition: background-color 200ms cubic-bezier(0.16,1,0.3,1), border-color 200ms cubic-bezier(0.16,1,0.3,1), transform 200ms cubic-bezier(0.16,1,0.3,1); } .ds-btn-primary { background: #23463c; color: #fafaf8; } .ds-btn-primary:hover { background: #183229; } .ds-btn:active { transform: translateY(1px); } .ds-btn:focus-visible { outline: 2px solid #23463c; outline-offset: 2px; }"
+    },
+    {
+      "name": "Botón secundario",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Acción secundaria y botón Agregar de las tarjetas de producto.",
+      "html": "<button class=\"ds-btn2\">Ver marcas</button>",
+      "css": ".ds-btn2 { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 44px; padding: 0 20px; border-radius: 2px; border: 1px solid #7e8983; background: #fafaf8; color: #1c2622; font-family: 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif; font-feature-settings: 'ss01'; font-size: 15px; font-weight: 500; cursor: pointer; transition: background-color 200ms cubic-bezier(0.16,1,0.3,1), border-color 200ms cubic-bezier(0.16,1,0.3,1), transform 200ms cubic-bezier(0.16,1,0.3,1); } .ds-btn2:hover { border-color: #1c2622; background: #ffffff; } .ds-btn2:active { transform: translateY(1px); } .ds-btn2:focus-visible { outline: 2px solid #23463c; outline-offset: 2px; }"
+    },
+    {
+      "name": "Campo de texto",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Campo de formulario y buscador; foco con borde pino y anillo pino al 20%.",
+      "html": "<label class=\"ds-label\" for=\"ds-q\">Buscar perfumes</label><input id=\"ds-q\" class=\"ds-input\" type=\"search\" placeholder=\"Busca por perfume, marca o nota\">",
+      "css": ".ds-label { display: block; margin-bottom: 6px; font-family: 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif; font-size: 14px; font-weight: 500; color: #1c2622; } .ds-input { display: block; width: 100%; max-width: 420px; height: 44px; padding: 0 12px; border: 1px solid #7e8983; border-radius: 2px; background: #ffffff; color: #1c2622; font-family: 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif; font-size: 16px; caret-color: #23463c; transition: border-color 150ms, box-shadow 150ms; } .ds-input::placeholder { color: #6b7770; } .ds-input:hover { border-color: #1c2622; } .ds-input:focus { outline: none; border-color: #23463c; box-shadow: 0 0 0 3px rgb(35 70 60 / 0.2); }"
+    },
+    {
+      "name": "Navegación principal",
+      "kind": "nav",
+      "refersTo": "navigation",
+      "description": "Fila de navegación de la tienda: activo con subrayado pino de 2px; Ofertas en caqui a la derecha.",
+      "html": "<nav class=\"ds-nav\"><a href=\"#\" class=\"is-active\" aria-current=\"page\">Caballeros</a><a href=\"#\">Damas</a><a href=\"#\">Niños</a><a href=\"#\">Marcas</a><a href=\"#\" class=\"ds-nav-sale\">Ofertas</a></nav>",
+      "css": ".ds-nav { display: flex; gap: 32px; border-bottom: 1px solid #d5dad2; background: #f1f2ee; padding: 0 16px; font-family: 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif; font-size: 15px; } .ds-nav a { display: inline-flex; align-items: center; height: 44px; margin-bottom: -1px; border-bottom: 2px solid transparent; color: #56625c; text-decoration: none; transition: color 150ms, border-color 150ms; } .ds-nav a:hover { color: #1c2622; border-bottom-color: #7e8983; } .ds-nav a.is-active { color: #1c2622; font-weight: 600; border-bottom-color: #23463c; } .ds-nav a.ds-nav-sale { margin-left: auto; color: #b8431f; font-weight: 500; } .ds-nav a.ds-nav-sale:hover { border-bottom-color: rgb(184 67 31 / 0.4); } .ds-nav a:focus-visible { outline: 2px solid #23463c; outline-offset: 2px; }"
+    },
+    {
+      "name": "Insignias de rebaja y cupón",
+      "kind": "chip",
+      "refersTo": "badge-sale",
+      "description": "Únicos usos cromáticos del caqui junto al precio rebajado: % de descuento y chip de cupón discontinuo.",
+      "html": "<span class=\"ds-badge ds-badge-sale\">-20%</span> <span class=\"ds-badge ds-badge-coupon\">Cupón NOTA10: 10% extra</span> <span class=\"ds-badge ds-badge-out\">Agotado</span>",
+      "css": ".ds-badge { display: inline-flex; align-items: center; gap: 4px; height: 24px; padding: 0 8px; border-radius: 2px; font-family: 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif; font-size: 12px; font-weight: 600; white-space: nowrap; } .ds-badge-sale { background: #b8431f; color: #ffffff; } .ds-badge-coupon { background: #f6e3da; color: #a63b1a; border: 1px dashed rgb(184 67 31 / 0.6); } .ds-badge-out { background: #1c2622; color: #fafaf8; }"
+    },
+    {
+      "name": "Tonos de estado",
+      "kind": "chip",
+      "refersTo": "tone-brand",
+      "description": "Estados de pedido como par tinte + tono.",
+      "html": "<span class=\"ds-tone ds-t-warn\">Pendiente</span> <span class=\"ds-tone ds-t-info\">Enviado</span> <span class=\"ds-tone ds-t-success\">Entregado</span> <span class=\"ds-tone ds-t-danger\">Cancelado</span> <span class=\"ds-tone ds-t-brand\">Pagado</span>",
+      "css": ".ds-tone { display: inline-flex; align-items: center; height: 24px; padding: 0 8px; border-radius: 2px; font-family: 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif; font-size: 12px; font-weight: 600; } .ds-t-warn { background: #fbefd6; color: #7a4e00; } .ds-t-info { background: #e3ebf3; color: #284866; } .ds-t-success { background: #ddefe3; color: #1f5137; } .ds-t-danger { background: #fde7e4; color: #a1271b; } .ds-t-brand { background: #dce7e1; color: #23463c; }"
+    },
+    {
+      "name": "Tarjeta de producto",
+      "kind": "card",
+      "refersTo": "photo-mat",
+      "description": "Foto sobre paspartú salvia (7%), marca, nombre, precio rebajado en caqui con tachado, botón secundario de bloque. Sin caja ni sombra; sin zoom en hover.",
+      "html": "<article class=\"ds-card\"><div class=\"ds-mat\"><div class=\"ds-mat-img\"></div><span class=\"ds-card-badge\">-20%</span></div><p class=\"ds-card-brand\">Chanel</p><h3 class=\"ds-card-name\"><a href=\"#\">Coco Mademoiselle</a></h3><p class=\"ds-card-spec\">Eau de parfum · 100 ml</p><p class=\"ds-card-price\"><span class=\"ds-price-now\">$128.00</span><span class=\"ds-price-old\">$160.00</span></p><button class=\"ds-card-btn\">Agregar</button></article>",
+      "css": ".ds-card { display: flex; flex-direction: column; width: 240px; font-family: 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif; font-feature-settings: 'ss01'; color: #1c2622; } .ds-mat { position: relative; aspect-ratio: 4 / 5; padding: 7%; background: #e4e8e1; border-radius: 2px; overflow: hidden; } .ds-mat-img { width: 100%; height: 100%; border-radius: 2px; background: linear-gradient(160deg, #d3dacf, #c2c6bf); } .ds-card-badge { position: absolute; top: 12px; left: 12px; height: 24px; padding: 0 8px; display: inline-flex; align-items: center; border-radius: 2px; background: #b8431f; color: #fff; font-size: 12px; font-weight: 600; } .ds-card-brand { margin: 12px 0 0; font-size: 13px; color: #56625c; } .ds-card-name { margin: 2px 0 0; font-size: 16px; font-weight: 600; line-height: 1.375; } .ds-card-name a { color: inherit; text-decoration: none; } .ds-card-name a:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; } .ds-card-spec { margin: 6px 0 0; font-size: 13px; color: #56625c; } .ds-card-price { display: flex; align-items: baseline; gap: 8px; margin: 12px 0 0; } .ds-price-now { font-size: 18px; font-weight: 600; color: #b8431f; } .ds-price-old { font-size: 14px; color: #56625c; text-decoration: line-through; text-decoration-thickness: 1px; } .ds-card-btn { margin-top: 12px; height: 36px; padding: 0 14px; border: 1px solid #7e8983; border-radius: 2px; background: #fafaf8; color: #1c2622; font: inherit; font-size: 14px; font-weight: 500; cursor: pointer; transition: border-color 200ms, background-color 200ms; } .ds-card-btn:hover { border-color: #1c2622; background: #fff; } .ds-card-btn:focus-visible { outline: 2px solid #23463c; outline-offset: 2px; }"
+    },
+    {
+      "name": "Opción seleccionable",
+      "kind": "custom",
+      "refersTo": "choice",
+      "description": "Opciones de envío y pago en checkout; seleccionada con borde pino y fondo pino velado.",
+      "html": "<label class=\"ds-choice\"><input type=\"radio\" name=\"ds-ship\" checked><span><strong>Ciudad de Panamá</strong><br><small>24 a 48 horas</small></span></label><label class=\"ds-choice\"><input type=\"radio\" name=\"ds-ship\"><span><strong>Retiro en tienda</strong><br><small>En 4 horas</small></span></label>",
+      "css": ".ds-choice { display: flex; gap: 12px; max-width: 360px; margin-bottom: 8px; padding: 16px; border: 1px solid #d5dad2; border-radius: 2px; background: #ffffff; color: #1c2622; font-family: 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif; cursor: pointer; transition: border-color 150ms, background-color 150ms; } .ds-choice small { color: #56625c; font-size: 14px; } .ds-choice input { margin-top: 2px; width: 18px; height: 18px; accent-color: #23463c; } .ds-choice:hover { border-color: #7e8983; } .ds-choice:has(:checked) { border-color: #23463c; background: rgb(220 231 225 / 0.5); } .ds-choice:has(:focus-visible) { box-shadow: 0 0 0 2px #23463c; }"
+    },
+    {
+      "name": "Tabla de datos del panel",
+      "kind": "custom",
+      "refersTo": "data-table",
+      "description": "Tabla del panel de operación: encabezados 12px/600 en tinta suave, filetes, hover niebla, cifras a la derecha sin tnum.",
+      "html": "<table class=\"ds-table\"><thead><tr><th>Pedido</th><th>Estado</th><th class=\"ds-num\">Total</th></tr></thead><tbody><tr><td>NA-1042</td><td><span class=\"ds-tone2\">Enviado</span></td><td class=\"ds-num\">$212.50</td></tr><tr><td>NA-1041</td><td><span class=\"ds-tone2 ds-tone2-warn\">Pendiente</span></td><td class=\"ds-num\">$89.00</td></tr></tbody></table>",
+      "css": ".ds-table { width: 100%; max-width: 520px; border-collapse: collapse; text-align: left; font-family: 'Schibsted Grotesk', ui-sans-serif, system-ui, sans-serif; font-size: 14px; color: #1c2622; background: #fafaf8; } .ds-table th { padding: 12px 16px; border-bottom: 1px solid #d5dad2; font-size: 12px; font-weight: 600; color: #56625c; background: #fafaf8; } .ds-table td { padding: 12px 16px; border-bottom: 1px solid #d5dad2; vertical-align: middle; } .ds-table tbody tr { transition: background-color 150ms; } .ds-table tbody tr:hover { background: #f1f2ee; } .ds-num { text-align: right; white-space: nowrap; } .ds-tone2 { display: inline-flex; align-items: center; height: 24px; padding: 0 8px; border-radius: 2px; font-size: 12px; font-weight: 600; background: #e3ebf3; color: #284866; } .ds-tone2-warn { background: #fbefd6; color: #7a4e00; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "El mostrador de niebla y pino",
+    "overview": "Nota Alta es una perfumería estándar de categoría ejecutada con el acabado de Aesop y Le Labo/Byredo: el frasco fotografiado y el precio honesto son los protagonistas, y todo lo demás retrocede. El fondo es una niebla fría casi blanca, la tinta es un verde pino casi negro, y el pino pleno aparece solo en regiones comprometidas (botón primario, banda de promoción, pie, barra de aviso). Un único color cálido, el caqui persimón, existe exclusivamente para hablar de dinero ahorrado.\n\nLa densidad es de tienda real, no de revista: cuadrículas de producto de 2 a 4 columnas, buscador siempre visible, filtros a mano. La expresión vive en la fotografía (sobre paspartú salvia en las rejillas, a sangre en lo editorial), en una sola familia tipográfica trabajada con tracking negativo y peso 600, y en una geometría casi recta de 2px. El tema es solo claro, por decisión.\n\nRechazos confirmados: el negro con dorado \"premium\" y el crema con latón; ilustración vectorial en lugar de foto de producto.\n\nEl panel (/panel/) es una superficie de operación que hereda los mismos tokens con menos expresión: barra lateral, tablas de datos, sin fotografía editorial ni animación de entrada.",
+    "keyCharacteristics": [
+      "Niebla fría (#f1f2ee) de fondo, tinta pino (#1c2622), campo pino (#23463c) en regiones comprometidas.",
+      "Caqui persimón (#b8431f) reservado a rebajas, cupones y contador del carrito.",
+      "Una sola familia: Schibsted Grotesk, 600 en titulares con tracking negativo.",
+      "Esquinas de 2px en todo; redondo completo solo en indicadores pequeños.",
+      "Foto de producto sobre paspartú salvia en rejillas; foto a sangre en baldosas editoriales.",
+      "Plano: filetes en vez de sombras; una única sombra flotante para capas temporales.",
+      "Movimiento mínimo: una revelación del hero y el ascenso de su texto."
+    ],
+    "rules": [
+      { "name": "The Caqui Reservado Rule", "body": "El caqui persimón solo dice \"ahorro\": precio rebajado, % de descuento, cupón, enlace de Ofertas y contador del carrito. Nunca decoración, nunca énfasis genérico, nunca error.", "section": "colors" },
+      { "name": "The Campo Comprometido Rule", "body": "El pino pleno ocupa regiones enteras y con función (botón primario, banda de aviso, promoción, pie). No se usa en franjas decorativas ni en textos de acento sueltos.", "section": "colors" },
+      { "name": "The Par de Tono Rule", "body": "Los estados siempre se expresan como tinte de fondo + tono de texto de la misma familia; nunca un tono saturado de fondo con texto blanco, salvo la insignia de rebaja.", "section": "colors" },
+      { "name": "The Una Voz Rule", "body": "Una sola familia en todo el sistema; la jerarquía sale de tamaño, peso 600 y tracking negativo, nunca de una segunda fuente.", "section": "typography" },
+      { "name": "The Cifras Proporcionales Rule", "body": "Los precios y cifras usan los numerales por defecto de Schibsted. No se activan numerales tabulares (tnum): en esta familia se leen como monoespaciados. La alineación en tablas se resuelve alineando a la derecha.", "section": "typography" },
+      { "name": "The Sin Mayúsculas Rule", "body": "No hay etiquetas en versalitas ni mayúsculas espaciadas; la única excepción funcional es el código de cupón (campo en mayúsculas y chip con tracking 0.08em).", "section": "typography" },
+      { "name": "The Plano Por Defecto Rule", "body": "Tarjetas, paneles, botones y fotos no tienen sombra. Si algo necesita separarse, usa un filete o un cambio de superficie.", "section": "elevation" },
+      { "name": "The Dos Píxeles Rule", "body": "Todo rectángulo lleva 2px; no existen radios intermedios (4, 8, 12px). Si no es un indicador pequeño, no es redondo.", "section": "shapes" }
+    ],
+    "dos": [
+      "Do presentar toda foto de producto en rejilla sobre paspartú salvia (7% de margen) y la foto editorial a sangre en baldosa salvia.",
+      "Do usar 2px en toda esquina y redondo completo solo en indicadores pequeños (contador, pasos, puntos de radio).",
+      "Do mostrar el precio rebajado en caqui junto al precio anterior tachado en tinta suave y la insignia \"-N%\".",
+      "Do expresar estados de pedido con el par tinte + tono de la misma familia.",
+      "Do separar superficies con filetes de 1px (#d5dad2) y rejillas gap-px antes que con sombras.",
+      "Do usar iconos Phosphor regular, en tinta suave o pino, siempre con aria-hidden junto a texto.",
+      "Do mantener el panel en los mismos tokens con menos expresión: sin fotografía editorial ni animaciones de entrada."
+    ],
+    "donts": [
+      "Don't usar el caqui para errores, campos obligatorios, decoración o énfasis que no sea ahorro.",
+      "Don't usar negro con dorado ni crema con latón como señal de lujo.",
+      "Don't añadir una segunda familia tipográfica ni activar numerales tabulares.",
+      "Don't aplicar zoom al pasar el cursor sobre fotos de producto.",
+      "Don't añadir sombras a tarjetas, paneles o botones; la sombra flotante es solo para hojas y toasts.",
+      "Don't introducir tema oscuro; el sistema es solo claro por decisión.",
+      "Don't añadir animaciones más allá de la revelación del hero, el ascenso de su texto, toasts y hojas.",
+      "Don't usar ilustraciones vectoriales en lugar de fotografía real de frascos."
+    ]
+  }
+}

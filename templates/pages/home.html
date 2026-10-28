@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+{% load static store %}
+{% block title %}Perfumería online en Panamá{% endblock %}
+{% block head %}<link rel="preload" as="image" href="{% static 'img/editorial/hero.webp' %}">{% endblock %}
+
+{% block content %}
+{# Hero #}
+<section class="container-page pt-6 lg:pt-8" aria-labelledby="hero-title">
+  <div class="grid items-stretch gap-6 lg:grid-cols-12 lg:gap-10">
+    <div class="flex flex-col justify-center py-4 lg:col-span-6 lg:py-12 xl:col-span-5">
+      <h1 id="hero-title" class="animate-rise text-[2.6rem] leading-[1.02] font-semibold tracking-[-0.04em] sm:text-5xl xl:text-[3.5rem]">
+        Perfumes originales para cada ocasión.
+      </h1>
+      <p class="animate-rise mt-5 max-w-[42ch] text-lg leading-relaxed text-ink-soft [animation-delay:90ms]">
+        Chanel, Versace, Lancôme y más casas, con envío en 24 a 48 horas dentro de Ciudad de Panamá.
+      </p>
+      <div class="animate-rise mt-8 flex flex-wrap gap-3 [animation-delay:160ms]">
+        <a href="{% url 'catalog:catalog' %}" class="btn btn-primary">Comprar perfumes<i class="ph ph-arrow-right" aria-hidden="true"></i></a>
+        <a href="{% url 'catalog:brands' %}" class="btn btn-secondary">Ver marcas</a>
+      </div>
+    </div>
+    <div class="photo-tile animate-reveal aspect-[4/3] lg:col-span-6 xl:col-span-7 lg:aspect-auto lg:min-h-[min(600px,calc(100dvh-190px))]">
+      <img src="{% static 'img/editorial/hero.webp' %}" alt="Frasco de Chanel N°5 Eau Première sobre un fondo gris claro" width="1600" height="1066" fetchpriority="high" class="object-[28%_50%]">
+    </div>
+  </div>
+</section>
+
+{# Servicio #}
+<section aria-label="Envíos y pagos" class="container-page mt-8">
+  <ul class="grid gap-px overflow-hidden rounded-sm border border-line bg-line sm:grid-cols-3">
+    <li class="flex items-start gap-3 bg-surface p-5">
+      <i class="ph ph-truck mt-0.5 text-2xl text-pine" aria-hidden="true"></i>
+      <p><span class="font-semibold">Envío en 24 a 48 horas</span><br><span class="text-sm text-ink-soft">Gratis en Ciudad de Panamá desde ${{ STORE.free_shipping_from }}.</span></p>
+    </li>
+    <li class="flex items-start gap-3 bg-surface p-5">
+      <i class="ph ph-credit-card mt-0.5 text-2xl text-pine" aria-hidden="true"></i>
+      <p><span class="font-semibold">Paga como prefieras</span><br><span class="text-sm text-ink-soft">Tarjeta, Yappy, ACH o contra entrega.</span></p>
+    </li>
+    <li class="flex items-start gap-3 bg-surface p-5">
+      <i class="ph ph-storefront mt-0.5 text-2xl text-pine" aria-hidden="true"></i>
+      <p><span class="font-semibold">Retiro en tienda</span><br><span class="text-sm text-ink-soft">Compra en línea y recoge en 4 horas.</span></p>
+    </li>
+  </ul>
+</section>
+
+{# Categorías #}
+<section class="container-page mt-20" aria-labelledby="cat-title">
+  <h2 id="cat-title" class="text-3xl font-semibold sm:text-4xl">Compra por categoría</h2>
+  <div class="mt-8 grid gap-4 md:grid-cols-[1.25fr_1fr] md:grid-rows-[280px_280px] lg:grid-rows-[320px_320px]">
+    {% with c=categories.damas %}
+    <a href="{{ c.get_absolute_url }}" class="group relative block overflow-hidden rounded-sm bg-sage md:row-span-2">
+      <div class="aspect-[4/5] md:absolute md:inset-0 md:aspect-auto">
+        <img src="{% static c.image_static %}" alt="" width="1000" height="1250" loading="lazy" class="size-full object-cover">
+      </div>
+      <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/90 via-ink/60 to-transparent p-6 pt-28 text-surface">
+        <h3 class="text-3xl font-semibold">{{ c.name }}</h3>
+        <p class="mt-1 max-w-sm text-surface">{{ c.tagline }}</p>
+        <span class="mt-4 inline-flex items-center gap-2 font-medium">Ver perfumes <i class="ph ph-arrow-right transition-transform group-hover:translate-x-1" aria-hidden="true"></i></span>
+      </div>
+    </a>
+    {% endwith %}
+    {% for c in categories.values %}{% if c.slug != "damas" %}
+    <a href="{{ c.get_absolute_url }}" class="group relative block overflow-hidden rounded-sm bg-sage">
+      <div class="aspect-[16/10] md:absolute md:inset-0 md:aspect-auto">
+        <img src="{% static c.image_static %}" alt="" width="1000" height="667" loading="lazy" class="size-full object-cover">
+      </div>
+      <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/85 via-ink/45 to-transparent p-6 pt-20 text-surface">
+        <h3 class="text-2xl font-semibold">{{ c.name }}</h3>
+        <p class="mt-1 max-w-sm text-sm text-surface">{{ c.tagline }}</p>
+      </div>
+    </a>
+    {% endif %}{% endfor %}
+  </div>
+</section>
+
+{# Más vendidos #}
+<section class="container-page mt-24" aria-labelledby="best-title">
+  <div class="flex items-end justify-between gap-4">
+    <h2 id="best-title" class="text-3xl font-semibold sm:text-4xl">Los más elegidos</h2>
+    <a href="{% url 'catalog:catalog' %}" class="link hidden shrink-0 font-medium sm:inline">Comprar perfumes</a>
+  </div>
+  <div class="mt-8 grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-6">
+    {% for product in bestsellers %}{% include "catalog/_card.html" %}{% endfor %}
+  </div>
+  <a href="{% url 'catalog:catalog' %}" class="btn btn-secondary btn-block mt-8 sm:hidden">Comprar perfumes</a>
+</section>
+
+{# Promoción #}
+{% if promo %}
+<section class="mt-24 bg-pine text-surface" aria-labelledby="promo-title">
+  <div class="container-page grid items-center gap-10 py-14 md:grid-cols-2 lg:py-0">
+    <div class="lg:py-20">
+      <h2 id="promo-title" class="text-4xl leading-[1.05] font-semibold sm:text-5xl">{{ promo.percent_off }}% de descuento en tu compra</h2>
+      <p class="mt-5 max-w-[46ch] text-lg leading-relaxed text-on-pine-soft">
+        Escribe el cupón en el carrito y el descuento se aplica a todo el catálogo, también sobre productos ya rebajados.
+      </p>
+      <div class="mt-8 flex flex-wrap items-center gap-4">
+        <span class="inline-flex h-11 items-center rounded-sm border border-dashed border-surface/50 px-4 font-semibold tracking-[0.08em]">{{ promo.code }}</span>
+        <a href="{% url 'catalog:catalog' %}?oferta=1" class="btn btn-on-pine">Ver ofertas</a>
+      </div>
+    </div>
+    <div class="photo-tile aspect-[4/3] md:aspect-[4/5] lg:my-0 lg:aspect-auto lg:h-[460px]">
+      <img src="{% static 'img/editorial/coleccion-dorada.webp' %}" alt="Tres frascos de perfume dorados iluminados por el sol" width="1000" height="1250" loading="lazy">
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{# Familias olfativas #}
+<section class="mt-24" aria-labelledby="fam-title">
+  <div class="container-page">
+    <h2 id="fam-title" class="text-3xl font-semibold sm:text-4xl">Elige por cómo quieres oler</h2>
+    <p class="mt-3 max-w-[60ch] text-ink-soft">Si no sabes qué marca buscar, empieza por la familia olfativa que te gusta.</p>
+  </div>
+  <ul class="container-page mt-8 grid snap-x snap-mandatory auto-cols-[72%] grid-flow-col gap-4 overflow-x-auto pb-4 sm:auto-cols-[42%] lg:grid-flow-row lg:grid-cols-4 lg:overflow-visible lg:pb-0" role="list">
+    {% for fam in families %}
+    <li class="snap-start">
+      <a href="{% url 'catalog:catalog' %}?familia={{ fam.value }}" class="group block">
+        <div class="photo-tile aspect-[3/4]">
+          <img src="{% static fam.image %}" alt="" width="1000" height="1333" loading="lazy" class="">
+        </div>
+        <h3 class="mt-3 flex items-center justify-between text-lg font-semibold">{{ fam.label }}<i class="ph ph-arrow-right text-ink-soft transition-transform group-hover:translate-x-1" aria-hidden="true"></i></h3>
+        <p class="mt-1 text-sm text-ink-soft">{{ fam.text }}</p>
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+
+{# Ofertas #}
+{% if deals %}
+<section class="container-page mt-24" aria-labelledby="deal-title">
+  <div class="flex items-end justify-between gap-4">
+    <h2 id="deal-title" class="text-3xl font-semibold sm:text-4xl">Rebajas de esta semana</h2>
+    <a href="{% url 'catalog:catalog' %}?oferta=1" class="link hidden shrink-0 font-medium sm:inline">Ver ofertas</a>
+  </div>
+  <ul class="mt-8 grid gap-4 md:grid-cols-2" role="list">
+    {% for product in deals %}
+    <li class="panel group relative flex gap-4 p-3 transition-colors hover:border-line-strong sm:gap-5">
+      <div class="photo-tile aspect-[4/5] w-28 shrink-0 sm:w-36">
+        <img src="{{ product.image_url }}" alt="" width="800" height="1000" loading="lazy" class="">
+      </div>
+      <div class="flex min-w-0 flex-1 flex-col py-1 pr-1">
+        <p class="text-[13px] text-ink-soft">{{ product.brand.name }}</p>
+        <h3 class="font-semibold leading-snug"><a href="{{ product.get_absolute_url }}" class="after:absolute after:inset-0">{{ product.name }}</a></h3>
+        <p class="mt-1 text-[13px] text-ink-soft">{{ product.spec_line }}</p>
+        <p class="mt-auto flex flex-wrap items-baseline gap-x-2 pt-3">
+          <span class="price text-xl text-sale"><span class="sr-only">Precio: </span>{{ product.price|money }}</span>
+          <span class="price-old text-sm"><span class="sr-only">Antes: </span>{{ product.compare_at_price|money }}</span>
+          <span class="badge badge-sale ml-auto">-{{ product.discount_percent }}%</span>
+        </p>
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+
+{# Marcas #}
+<section class="container-page mt-24" aria-labelledby="brand-title">
+  <div class="flex items-end justify-between gap-4">
+    <h2 id="brand-title" class="text-3xl font-semibold sm:text-4xl">Marcas destacadas</h2>
+    <a href="{% url 'catalog:brands' %}" class="link shrink-0 font-medium">Ver marcas</a>
+  </div>
+  <ul class="mt-8 grid grid-cols-2 gap-px overflow-hidden rounded-sm border border-line bg-line sm:grid-cols-4" role="list">
+    {% for brand in brands %}
+    <li>
+      <a href="{{ brand.get_absolute_url }}" class="flex h-28 flex-col justify-center bg-surface px-5 transition-colors hover:bg-white sm:h-32">
+        <span class="text-lg font-semibold tracking-[-0.02em] sm:text-xl">{{ brand.name }}</span>
+        <span class="mt-1 text-sm text-ink-soft">{{ brand.country }}</span>
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endblock %}

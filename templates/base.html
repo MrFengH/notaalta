@@ -1,0 +1,29 @@
+{% load static %}<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Perfumería online en Panamá{% endblock %} · Nota Alta</title>
+  <meta name="description" content="{% block description %}Perfumes originales de Chanel, Versace, Lancôme y más. Envío en Ciudad de Panamá e interior, pago con tarjeta, Yappy o ACH.{% endblock %}">
+  <meta name="theme-color" content="#23463c">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.2/src/regular/style.css">
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+  {% block head %}{% endblock %}
+</head>
+<body class="{% block body_class %}min-h-dvh flex flex-col{% endblock %}">
+  <a href="#contenido" class="skip-link">Saltar al contenido</a>
+  {% block chrome_top %}{% include "partials/header.html" %}{% endblock %}
+
+  <main id="contenido" class="flex-1" tabindex="-1">
+    {% block content %}{% endblock %}
+  </main>
+
+  {% block chrome_bottom %}{% include "partials/footer.html" %}{% endblock %}
+  {% include "partials/toasts.html" %}
+  <script src="{% static 'js/app.js' %}" defer></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

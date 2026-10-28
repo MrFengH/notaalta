@@ -1,0 +1,58 @@
+{% extends "dashboard/base.html" %}
+{% block dash_title %}{% if product %}Editar {{ product.name }}{% else %}Nuevo producto{% endif %}{% endblock %}
+{% block crumbs %}<a href="{% url 'dashboard:products' %}" class="mb-1 inline-flex items-center gap-1 text-sm text-ink-soft hover:text-ink"><i class="ph ph-arrow-left" aria-hidden="true"></i>Productos</a>{% endblock %}
+{% block heading %}{% if product %}{{ product }}{% else %}Nuevo producto{% endif %}{% endblock %}
+
+{% block dash %}
+<form method="post" enctype="multipart/form-data" class="grid gap-6 xl:grid-cols-3" novalidate>
+  {% csrf_token %}
+  <div class="min-w-0 space-y-6 xl:col-span-2">
+    {% if form.errors %}
+      <div class="rounded-sm border border-danger/30 bg-danger-tint p-4 text-sm text-danger" role="alert" tabindex="-1" data-autofocus>
+        <p class="font-semibold">Revisa los campos marcados antes de guardar.</p>
+      </div>
+    {% endif %}
+    <fieldset class="panel grid gap-5 p-5 sm:grid-cols-2">
+      <legend class="sr-only">Información básica</legend>
+      <h2 class="font-semibold sm:col-span-2">Información básica</h2>
+      {% include "partials/field.html" with field=form.name %}
+      {% include "partials/field.html" with field=form.brand %}
+      {% include "partials/field.html" with field=form.category %}
+      {% include "partials/field.html" with field=form.family %}
+      {% include "partials/field.html" with field=form.concentration %}
+      {% include "partials/field.html" with field=form.volume_ml %}
+      {% include "partials/field.html" with field=form.short_description class="sm:col-span-2" %}
+      {% include "partials/field.html" with field=form.description class="sm:col-span-2" %}
+    </fieldset>
+    <fieldset class="panel grid gap-5 p-5 sm:grid-cols-3">
+      <legend class="sr-only">Notas olfativas</legend>
+      <h2 class="font-semibold sm:col-span-3">Notas olfativas</h2>
+      {% include "partials/field.html" with field=form.notes_top %}
+      {% include "partials/field.html" with field=form.notes_heart %}
+      {% include "partials/field.html" with field=form.notes_base %}
+    </fieldset>
+  </div>
+
+  <div class="space-y-6">
+    <fieldset class="panel grid gap-5 p-5">
+      <legend class="sr-only">Precio e inventario</legend>
+      <h2 class="font-semibold">Precio e inventario</h2>
+      {% include "partials/field.html" with field=form.price %}
+      {% include "partials/field.html" with field=form.compare_at_price %}
+      {% include "partials/field.html" with field=form.stock %}
+    </fieldset>
+    <fieldset class="panel grid gap-4 p-5">
+      <legend class="sr-only">Imagen y publicación</legend>
+      <h2 class="font-semibold">Imagen y publicación</h2>
+      {% if product %}<div class="photo-tile aspect-[4/5] w-32"><img src="{{ product.image_url }}" alt="Imagen actual de {{ product }}" width="256" height="320"></div>{% endif %}
+      {% include "partials/field.html" with field=form.image %}
+      <label class="flex items-center gap-2.5">{{ form.is_active }} Publicado en la tienda</label>
+      <label class="flex items-center gap-2.5">{{ form.is_featured }} Destacar en la página de inicio</label>
+    </fieldset>
+    <div class="flex gap-3">
+      <button type="submit" class="btn btn-primary flex-1">{% if product %}Guardar cambios{% else %}Crear producto{% endif %}</button>
+      <a href="{% url 'dashboard:products' %}" class="btn btn-ghost">Cancelar</a>
+    </div>
+  </div>
+</form>
+{% endblock %}

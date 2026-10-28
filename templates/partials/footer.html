@@ -1,0 +1,41 @@
+<footer class="mt-24 bg-pine text-surface">
+  <div class="container-page grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr] lg:gap-12">
+    <div class="max-w-sm">
+      <p class="text-2xl font-semibold tracking-[-0.035em]">Nota Alta</p>
+      <p class="mt-3 text-on-pine-soft leading-relaxed">Perfumería online en Panamá. Marcas originales, precios claros y envío a todo el país.</p>
+    </div>
+    <nav aria-label="Tienda">
+      <h2 class="text-sm font-semibold">Tienda</h2>
+      <ul class="mt-4 space-y-2.5 text-on-pine-soft">
+        <li><a class="hover:text-surface" href="{% url 'catalog:category' 'caballeros' %}">Caballeros</a></li>
+        <li><a class="hover:text-surface" href="{% url 'catalog:category' 'damas' %}">Damas</a></li>
+        <li><a class="hover:text-surface" href="{% url 'catalog:category' 'ninos' %}">Niños</a></li>
+        <li><a class="hover:text-surface" href="{% url 'catalog:brands' %}">Marcas</a></li>
+        <li><a class="hover:text-surface" href="{% url 'catalog:catalog' %}?oferta=1">Ofertas</a></li>
+      </ul>
+    </nav>
+    <nav aria-label="Ayuda">
+      <h2 class="text-sm font-semibold">Ayuda</h2>
+      <ul class="mt-4 space-y-2.5 text-on-pine-soft">
+        <li><a class="hover:text-surface" href="{% url 'accounts:profile' %}">Mis pedidos</a></li>
+        <li><a class="hover:text-surface" href="{% url 'core:contact' %}">Contacto</a></li>
+        <li><a class="hover:text-surface" href="{% url 'core:about' %}">Nosotros</a></li>
+      </ul>
+    </nav>
+    <div>
+      <h2 class="text-sm font-semibold">Pagos y envíos</h2>
+      <ul class="mt-4 space-y-2.5 text-on-pine-soft">
+        <li>Tarjeta, Yappy, ACH o contra entrega</li>
+        <li>Ciudad de Panamá: 24 a 48 horas</li>
+        <li>Interior: 3 a 5 días hábiles</li>
+        <li>Precios con ITBMS incluido</li>
+      </ul>
+    </div>
+  </div>
+  <div class="border-t border-surface/15">
+    <div class="container-page flex flex-col gap-2 py-6 text-sm text-on-pine-soft sm:flex-row sm:justify-between">
+      <p>© {% now "Y" %} Nota Alta. Tienda de demostración: precios y pedidos de ejemplo.</p>
+      <p>{{ STORE.email }}</p>
+    </div>
+  </div>
+</footer>

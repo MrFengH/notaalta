@@ -1,0 +1,46 @@
+{% extends "dashboard/base.html" %}
+{% load store %}
+{% block dash_title %}Inventario{% endblock %}
+{% block heading %}Inventario{% endblock %}
+
+{% block dash %}
+<dl class="grid grid-cols-2 gap-px overflow-hidden rounded-sm border border-line bg-line lg:grid-cols-4">
+  <div class="bg-surface p-4"><dt class="text-sm text-ink-soft">Unidades en stock</dt><dd class="mt-1 text-2xl font-semibold">{{ summary.units|default:0 }}</dd></div>
+  <div class="bg-surface p-4"><dt class="text-sm text-ink-soft">Valor a precio de venta</dt><dd class="mt-1 text-2xl font-semibold">{{ summary.value|money }}</dd></div>
+  <div class="bg-surface p-4"><dt class="text-sm"><a href="?stock=bajo" class="link text-ink-soft">Stock bajo (1 a 5)</a></dt><dd class="mt-1 text-2xl font-semibold text-warn">{{ summary.low }}</dd></div>
+  <div class="bg-surface p-4"><dt class="text-sm"><a href="?stock=agotado" class="link text-ink-soft">Agotados</a></dt><dd class="mt-1 text-2xl font-semibold text-danger">{{ summary.out }}</dd></div>
+</dl>
+
+<div class="mt-6">{% include "dashboard/_product_filters.html" %}</div>
+
+<div class="panel mt-4 overflow-x-auto">
+  <table class="data-table">
+    <thead><tr><th scope="col">Producto</th><th scope="col" class="hidden sm:table-cell">Estado</th><th scope="col" class="num hidden sm:table-cell">Precio</th><th scope="col">Ajustar stock</th></tr></thead>
+    <tbody>
+      {% for p in page_obj %}
+        <tr>
+          <td><a href="{% url 'dashboard:product_edit' p.pk %}" class="font-semibold hover:underline">{{ p.name }}</a><span class="block text-xs text-ink-soft">{{ p.brand.name }} · {{ p.category.name }}</span></td>
+          <td class="hidden sm:table-cell">
+            {% if p.stock == 0 %}<span class="badge tone-danger">Agotado</span>
+            {% elif p.low_stock %}<span class="badge tone-warn">Stock bajo</span>
+            {% else %}<span class="badge tone-success">Disponible</span>{% endif %}
+          </td>
+          <td class="num hidden sm:table-cell">{{ p.price|money }}</td>
+          <td>
+            <form method="post" action="{% url 'dashboard:inventory_update' p.pk %}" class="flex items-center gap-2">
+              {% csrf_token %}
+              <input type="hidden" name="back" value="{{ querystring }}">
+              <label for="stock-{{ p.pk }}" class="sr-only">Unidades de {{ p }}</label>
+              <input id="stock-{{ p.pk }}" type="number" name="stock" value="{{ p.stock }}" min="0" max="9999" inputmode="numeric" class="input h-9 w-24 text-right">
+              <button type="submit" class="btn btn-secondary btn-sm">Guardar</button>
+            </form>
+          </td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="4" class="py-12 text-center text-ink-soft">No hay productos con estos filtros.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% include "partials/pagination.html" %}
+{% endblock %}

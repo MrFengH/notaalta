@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% load store %}
+{% block title %}Carrito{% endblock %}
+
+{% block content %}
+<div class="container-page pt-8">
+  <h1 class="text-4xl font-semibold sm:text-5xl">Carrito</h1>
+
+  {% if cart.lines %}
+  <div class="mt-8 grid gap-10 lg:grid-cols-12 lg:gap-12">
+    <section class="lg:col-span-8" aria-labelledby="items-title">
+      <h2 id="items-title" class="sr-only">Productos en el carrito</h2>
+      <ul class="divide-y divide-line border-y border-line" role="list">
+        {% for line in cart %}
+        {% with p=line.product %}
+        <li class="flex gap-4 py-5 sm:gap-6">
+          <a href="{{ p.get_absolute_url }}" class="photo-tile aspect-[4/5] w-24 shrink-0 sm:w-32" tabindex="-1" aria-hidden="true">
+            <img src="{{ p.image_url }}" alt="" width="256" height="320" loading="lazy">
+          </a>
+          <div class="flex min-w-0 flex-1 flex-col gap-3 sm:flex-row sm:justify-between">
+            <div class="min-w-0">
+              <p class="text-[13px] text-ink-soft">{{ p.brand.name }}</p>
+              <h3 class="font-semibold leading-snug"><a href="{{ p.get_absolute_url }}" class="hover:underline hover:underline-offset-4">{{ p.name }}</a></h3>
+              <p class="mt-0.5 text-sm text-ink-soft">{{ p.spec_line }}</p>
+              <p class="mt-2 text-sm">
+                <span class="price {% if p.on_sale %}text-sale{% endif %}">{{ p.price|money }}</span>
+                {% if p.on_sale %}<span class="price-old ml-1"><span class="sr-only">Antes: </span>{{ p.compare_at_price|money }}</span>{% endif %}
+                <span class="text-ink-soft"> c/u</span>
+              </p>
+              {% if p.low_stock %}<p class="mt-1 text-sm font-medium text-warn">Quedan {{ p.stock }} en inventario</p>{% endif %}
+            </div>
+
+            <div class="flex flex-wrap items-center gap-x-4 gap-y-2 sm:flex-col sm:flex-nowrap sm:items-end sm:justify-between">
+              <form method="post" action="{% url 'cart:update' p.pk %}" data-qty-autosubmit>
+                {% csrf_token %}
+                <div class="flex h-10 items-center rounded-sm border border-line-strong bg-white" data-qty>
+                  <button type="button" class="grid size-10 place-items-center hover:bg-sage" data-qty-step="-1" aria-label="Quitar una unidad de {{ p.name }}"><i class="ph ph-minus" aria-hidden="true"></i></button>
+                  <label for="qty-{{ p.pk }}" class="sr-only">Cantidad de {{ p.name }}</label>
+                  <input id="qty-{{ p.pk }}" type="number" name="quantity" value="{{ line.quantity }}" min="1" max="{{ p.stock }}" inputmode="numeric" class="h-full w-10 border-0 bg-transparent text-center focus:outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none">
+                  <button type="button" class="grid size-10 place-items-center hover:bg-sage" data-qty-step="1" aria-label="Agregar una unidad de {{ p.name }}"><i class="ph ph-plus" aria-hidden="true"></i></button>
+                </div>
+                <noscript><button class="link mt-1 text-sm">Actualizar</button></noscript>
+              </form>
+              <p class="price ml-auto text-lg sm:ml-0"><span class="sr-only">Subtotal: </span>{{ line.total|money }}</p>
+              <form method="post" action="{% url 'cart:remove' p.pk %}" class="basis-full sm:basis-auto">
+                {% csrf_token %}
+                <button type="submit" class="inline-flex items-center gap-1.5 text-sm text-ink-soft underline-offset-4 hover:text-danger hover:underline"><i class="ph ph-trash" aria-hidden="true"></i>Quitar<span class="sr-only"> {{ p.name }}</span></button>
+              </form>
+            </div>
+          </div>
+        </li>
+        {% endwith %}
+        {% endfor %}
+      </ul>
+      <a href="{% url 'catalog:catalog' %}" class="link mt-6 inline-flex items-center gap-1.5 text-sm font-medium"><i class="ph ph-arrow-left" aria-hidden="true"></i>Seguir comprando</a>
+    </section>
+
+    <aside class="lg:col-span-4" aria-labelledby="summary-title">
+      <div class="panel p-6 lg:sticky lg:top-[136px]">
+        <h2 id="summary-title" class="text-xl font-semibold">Resumen</h2>
+        <dl class="mt-5 space-y-3 text-[15px]">
+          <div class="flex justify-between"><dt class="text-ink-soft">Subtotal ({{ cart_count }} artículo{{ cart_count|pluralize }})</dt><dd>{{ cart.subtotal|money }}</dd></div>
+          {% if cart.discount %}
+          <div class="flex justify-between text-sale"><dt>Cupón {{ cart.coupon.code }}</dt><dd>-{{ cart.discount|money }}</dd></div>
+          {% endif %}
+          <div class="flex justify-between"><dt class="text-ink-soft">Envío</dt><dd class="text-ink-soft">Se calcula al pagar</dd></div>
+          <div class="flex items-baseline justify-between border-t border-line pt-4"><dt class="font-semibold">Total</dt><dd class="price text-2xl">{{ cart.total|money }}</dd></div>
+        </dl>
+        <p class="mt-1 text-right text-xs text-ink-soft">{{ STORE.tax_label }}</p>
+
+        {% if free_remaining %}
+          <p class="mt-4 rounded-sm bg-pine-tint px-3 py-2.5 text-sm text-pine">Agrega <strong>{{ free_remaining|money }}</strong> más y tu envío en Ciudad de Panamá será gratis.</p>
+        {% else %}
+          <p class="mt-4 flex items-center gap-2 rounded-sm bg-pine-tint px-3 py-2.5 text-sm font-medium text-pine"><i class="ph ph-check-circle" aria-hidden="true"></i>Tu envío en Ciudad de Panamá es gratis.</p>
+        {% endif %}
+
+        <a href="{% url 'orders:checkout' %}" class="btn btn-primary btn-block mt-5 h-12">Ir a pagar<i class="ph ph-lock-simple" aria-hidden="true"></i></a>
+
+        <form method="post" action="{% url 'cart:coupon' %}" class="mt-6 border-t border-line pt-5">
+          {% csrf_token %}
+          {% if cart.coupon %}
+            <p class="flex items-center justify-between gap-3 text-sm">
+              <span><span class="badge badge-coupon"><i class="ph ph-ticket" aria-hidden="true"></i>{{ cart.coupon.code }}</span> <span class="text-ink-soft">{{ cart.coupon.description }}</span></span>
+              <button type="submit" name="remove" value="1" class="link shrink-0">Quitar</button>
+            </p>
+          {% else %}
+            <label for="coupon" class="label">Cupón de descuento</label>
+            <div class="flex gap-2">
+              <input id="coupon" name="code" type="text" class="input uppercase" autocomplete="off" autocapitalize="characters" placeholder="Ej.: NOTA10">
+              <button type="submit" class="btn btn-secondary shrink-0">Aplicar</button>
+            </div>
+          {% endif %}
+        </form>
+      </div>
+    </aside>
+  </div>
+  {% else %}
+  <div class="mt-8 rounded-sm border border-dashed border-line-strong bg-surface px-6 py-16 text-center">
+    <i class="ph ph-handbag text-5xl text-ink-soft" aria-hidden="true"></i>
+    <h2 class="mt-4 text-2xl font-semibold">Tu carrito está vacío</h2>
+    <p class="mx-auto mt-2 max-w-[44ch] text-ink-soft">Explora el catálogo o empieza por los más elegidos de esta semana.</p>
+    <div class="mt-6 flex flex-wrap justify-center gap-3">
+      <a href="{% url 'catalog:catalog' %}" class="btn btn-primary">Comprar perfumes</a>
+      <a href="{% url 'catalog:catalog' %}?oferta=1" class="btn btn-secondary">Ver ofertas</a>
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

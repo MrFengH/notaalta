@@ -1,0 +1,17 @@
+{% extends "accounts/_auth_layout.html" %}
+{% block title %}Crear cuenta{% endblock %}
+{% block auth %}
+<h1 class="text-4xl font-semibold">Crear cuenta</h1>
+<p class="mt-2 text-ink-soft">Guarda tu dirección y sigue el estado de cada pedido.</p>
+
+<form method="post" class="mt-8 grid gap-5 sm:grid-cols-2" novalidate>
+  {% csrf_token %}
+  {% include "partials/field.html" with field=form.first_name %}
+  {% include "partials/field.html" with field=form.last_name %}
+  {% include "partials/field.html" with field=form.email class="sm:col-span-2" %}
+  {% include "partials/field.html" with field=form.password1 class="sm:col-span-2" %}
+  {% include "partials/field.html" with field=form.password2 class="sm:col-span-2" %}
+  <button type="submit" class="btn btn-primary btn-block h-12 sm:col-span-2">Crear cuenta</button>
+</form>
+<p class="mt-8 border-t border-line pt-6 text-ink-soft">¿Ya tienes cuenta? <a href="{% url 'accounts:login' %}" class="link font-medium text-ink">Inicia sesión</a></p>
+{% endblock %}

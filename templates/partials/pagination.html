@@ -1,0 +1,11 @@
+{% if page_obj.paginator.num_pages > 1 %}
+<nav aria-label="Paginación" class="mt-12 flex items-center justify-between gap-4 border-t border-line pt-6 text-sm">
+  {% if page_obj.has_previous %}
+    <a href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page={{ page_obj.previous_page_number }}" class="btn btn-secondary btn-sm"><i class="ph ph-arrow-left" aria-hidden="true"></i>Anterior</a>
+  {% else %}<span></span>{% endif %}
+  <p class="text-ink-soft">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</p>
+  {% if page_obj.has_next %}
+    <a href="?{% if querystring %}{{ querystring }}&amp;{% endif %}page={{ page_obj.next_page_number }}" class="btn btn-secondary btn-sm">Siguiente<i class="ph ph-arrow-right" aria-hidden="true"></i></a>
+  {% else %}<span></span>{% endif %}
+</nav>
+{% endif %}

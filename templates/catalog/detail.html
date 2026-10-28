@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% load store %}
+{% block title %}{{ product.brand.name }} {{ product.name }} {{ product.spec_line }}{% endblock %}
+{% block description %}{{ product.short_description }} {{ product.price|money }} con envío en Panamá.{% endblock %}
+
+{% block content %}
+<div class="container-page pt-6">
+  <nav aria-label="Ruta de navegación" class="text-sm text-ink-soft">
+    <ol class="flex flex-wrap items-center gap-1.5">
+      <li><a href="{% url 'core:home' %}" class="hover:text-ink hover:underline">Inicio</a></li>
+      <li aria-hidden="true">/</li><li><a href="{{ product.category.get_absolute_url }}" class="hover:text-ink hover:underline">{{ product.category.name }}</a></li>
+      <li aria-hidden="true">/</li><li><a href="{{ product.brand.get_absolute_url }}" class="hover:text-ink hover:underline">{{ product.brand.name }}</a></li>
+      <li aria-hidden="true">/</li><li aria-current="page" class="text-ink">{{ product.name }}</li>
+    </ol>
+  </nav>
+
+  <div class="mt-6 grid gap-8 lg:grid-cols-12 lg:gap-12">
+    {# Galería #}
+    <div class="lg:col-span-7" data-gallery>
+      <div class="photo-mat aspect-[4/5] lg:max-h-[calc(100dvh-180px)] lg:w-full">
+        <img src="{{ images.0.url }}" alt="{{ images.0.alt }}" width="800" height="1000" fetchpriority="high" data-gallery-main>
+        {% if product.on_sale and product.in_stock %}<span class="badge badge-sale absolute top-4 left-4">-{{ product.discount_percent }}%</span>{% endif %}
+      </div>
+      {% if images|length > 1 %}
+      <ul class="mt-3 flex gap-3" aria-label="Más fotos">
+        {% for img in images %}
+          <li>
+            <button type="button" class="photo-tile block aspect-[4/5] w-20 ring-offset-2 ring-offset-ground aria-pressed:ring-2 aria-pressed:ring-pine sm:w-24" data-gallery-thumb data-src="{{ img.url }}" data-alt="{{ img.alt }}" aria-pressed="{% if forloop.first %}true{% else %}false{% endif %}" aria-label="Ver foto {{ forloop.counter }} de {{ images|length }}">
+              <img src="{{ img.url }}" alt="" width="160" height="200" loading="lazy">
+            </button>
+          </li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    </div>
+
+    {# Compra #}
+    <div class="lg:col-span-5">
+      <div class="lg:sticky lg:top-[136px]">
+        <h1 class="text-4xl leading-[1.05] font-semibold sm:text-[2.75rem]">{{ product.name }}</h1>
+        <p class="mt-2 text-ink-soft"><a href="{{ product.brand.get_absolute_url }}" class="font-medium text-ink underline decoration-ink/30 underline-offset-4 hover:decoration-ink">{{ product.brand.name }}</a> · {{ product.get_concentration_display }} {{ product.volume_ml }} ml</p>
+
+        <div class="mt-6 border-t border-line pt-6">
+          <p class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+            <span class="price text-3xl {% if product.on_sale %}text-sale{% endif %}"><span class="sr-only">Precio: </span>{{ product.price|money }}</span>
+            {% if product.on_sale %}
+              <span class="price-old text-lg"><span class="sr-only">Antes: </span>{{ product.compare_at_price|money }}</span>
+              <span class="text-sm font-semibold text-sale">Ahorras {{ product.savings|money }} ({{ product.discount_percent }}%)</span>
+            {% endif %}
+          </p>
+          <p class="mt-1 text-sm text-ink-soft">{{ STORE.tax_label }}</p>
+
+          {% if coupon %}
+            <p class="mt-4 flex flex-wrap items-center gap-2 text-sm">
+              <span class="badge badge-coupon"><i class="ph ph-ticket" aria-hidden="true"></i>{{ coupon.code }}</span>
+              <span class="text-ink-soft">{{ coupon.percent_off }}% extra en {{ product.brand.name }}. Escríbelo en el carrito.</span>
+            </p>
+          {% endif %}
+
+          <p class="mt-5 flex items-center gap-2 font-medium {% if not product.in_stock %}text-danger{% elif product.low_stock %}text-warn{% else %}text-success{% endif %}">
+            {% if not product.in_stock %}
+              <i class="ph ph-x-circle text-xl" aria-hidden="true"></i>Agotado por ahora
+            {% elif product.low_stock %}
+              <i class="ph ph-warning text-xl" aria-hidden="true"></i>Quedan {{ product.stock }} unidad{{ product.stock|pluralize:"es" }}
+            {% else %}
+              <i class="ph ph-check-circle text-xl" aria-hidden="true"></i>Disponible: {{ product.stock }} unidades en inventario
+            {% endif %}
+          </p>
+
+          {% if product.in_stock %}
+          <form method="post" action="{% url 'cart:add' product.pk %}" class="mt-5 flex gap-3" data-add-to-cart>
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+            <div class="flex h-12 items-center rounded-sm border border-line-strong bg-white" data-qty>
+              <button type="button" class="grid size-11 place-items-center text-lg hover:bg-sage" data-qty-step="-1" aria-label="Quitar una unidad"><i class="ph ph-minus" aria-hidden="true"></i></button>
+              <label for="cantidad" class="sr-only">Cantidad</label>
+              <input id="cantidad" type="number" name="quantity" value="1" min="1" max="{{ product.stock }}" inputmode="numeric" class="h-full w-12 border-0 bg-transparent text-center text-base focus:outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none">
+              <button type="button" class="grid size-11 place-items-center text-lg hover:bg-sage" data-qty-step="1" aria-label="Agregar una unidad"><i class="ph ph-plus" aria-hidden="true"></i></button>
+            </div>
+            <button type="submit" class="btn btn-primary h-12 flex-1"><i class="ph ph-handbag text-lg" aria-hidden="true"></i>Agregar al carrito</button>
+          </form>
+          {% else %}
+          <a href="{{ product.category.get_absolute_url }}?familia={{ product.family }}&amp;disponible=1" class="btn btn-secondary btn-block mt-5 h-12">Ver alternativas disponibles</a>
+          {% endif %}
+
+          <p class="mt-6 leading-relaxed">{{ product.short_description }}</p>
+
+          <ul class="mt-6 divide-y divide-line rounded-sm border border-line bg-surface text-sm" aria-label="Envío y pago">
+            <li class="flex gap-3 p-4">
+              <i class="ph ph-truck mt-0.5 text-xl text-pine" aria-hidden="true"></i>
+              <p><span class="font-semibold">Ciudad de Panamá: 24 a 48 horas</span>, $4.50 o gratis desde ${{ STORE.free_shipping_from }}. Interior del país: 3 a 5 días hábiles, $9.00.</p>
+            </li>
+            <li class="flex gap-3 p-4">
+              <i class="ph ph-storefront mt-0.5 text-xl text-pine" aria-hidden="true"></i>
+              <p><span class="font-semibold">Retiro en tienda gratis</span>, listo en 4 horas.</p>
+            </li>
+            <li class="flex gap-3 p-4">
+              <i class="ph ph-credit-card mt-0.5 text-xl text-pine" aria-hidden="true"></i>
+              <p><span class="font-semibold">Paga con tarjeta, Yappy o ACH</span>, o en efectivo al recibir en Ciudad de Panamá.</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {# Descripción y notas #}
+  <section class="mt-20 grid gap-10 border-t border-line pt-12 lg:grid-cols-12" aria-labelledby="desc-title">
+    <div class="lg:col-span-5">
+      <h2 id="desc-title" class="text-2xl font-semibold">Sobre este perfume</h2>
+      <p class="mt-4 max-w-[62ch] leading-relaxed text-ink-soft">{{ product.description }}</p>
+      <dl class="mt-6 grid grid-cols-2 gap-x-6 gap-y-3 text-sm">
+        <dt class="text-ink-soft">Familia</dt><dd class="font-medium">{{ product.get_family_display }}</dd>
+        <dt class="text-ink-soft">Concentración</dt><dd class="font-medium">{{ product.get_concentration_display }}</dd>
+        <dt class="text-ink-soft">Contenido</dt><dd class="font-medium">{{ product.volume_ml }} ml</dd>
+        <dt class="text-ink-soft">Marca</dt><dd class="font-medium">{{ product.brand.name }}{% if product.brand.country %}, {{ product.brand.country }}{% endif %}</dd>
+      </dl>
+    </div>
+    <div class="lg:col-span-7">
+      <h2 class="text-2xl font-semibold">Cómo evoluciona en la piel</h2>
+      <ol class="mt-6 grid gap-px overflow-hidden rounded-sm border border-line bg-line sm:grid-cols-3">
+        <li class="bg-surface p-5">
+          <p class="text-sm font-semibold text-pine">Salida</p>
+          <p class="mt-1 text-xs text-ink-soft">Primeros 15 minutos</p>
+          <p class="mt-3 leading-relaxed">{{ product.notes_top }}</p>
+        </li>
+        <li class="bg-surface p-5">
+          <p class="text-sm font-semibold text-pine">Corazón</p>
+          <p class="mt-1 text-xs text-ink-soft">De 30 minutos a 3 horas</p>
+          <p class="mt-3 leading-relaxed">{{ product.notes_heart }}</p>
+        </li>
+        <li class="bg-surface p-5">
+          <p class="text-sm font-semibold text-pine">Fondo</p>
+          <p class="mt-1 text-xs text-ink-soft">Lo que queda al final del día</p>
+          <p class="mt-3 leading-relaxed">{{ product.notes_base }}</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  {% if related %}
+  <section class="mt-20" aria-labelledby="rel-title">
+    <h2 id="rel-title" class="text-2xl font-semibold sm:text-3xl">También te puede gustar</h2>
+    <div class="mt-8 grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-4 lg:gap-x-6">
+      {% for product in related %}{% include "catalog/_card.html" %}{% endfor %}
+    </div>
+  </section>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends "dashboard/base.html" %}
+{% block dash_title %}Marcas{% endblock %}
+{% block heading %}Marcas{% endblock %}
+{% block actions %}<a href="{% url 'dashboard:brand_new' %}" class="btn btn-primary btn-sm"><i class="ph ph-plus" aria-hidden="true"></i>Nueva marca</a>{% endblock %}
+
+{% block dash %}
+<div class="panel overflow-x-auto">
+  <table class="data-table">
+    <thead><tr><th scope="col">Marca</th><th scope="col" class="hidden sm:table-cell">Origen</th><th scope="col" class="num">Productos</th><th scope="col" class="num hidden sm:table-cell">Stock total</th><th scope="col" class="num">Vendidas</th><th scope="col" class="hidden sm:table-cell">Inicio</th><th scope="col" class="hidden sm:table-cell"><span class="sr-only">Acciones</span></th></tr></thead>
+    <tbody>
+      {% for b in brands %}
+        <tr>
+          <td><a href="{% url 'dashboard:brand_edit' b.pk %}" class="font-semibold hover:underline">{{ b.name }}</a></td>
+          <td class="hidden sm:table-cell text-ink-soft">{{ b.country|default:"Sin indicar" }}</td>
+          <td class="num"><a href="{% url 'dashboard:products' %}?marca={{ b.slug }}" class="hover:underline">{{ b.product_count }}</a></td>
+          <td class="num hidden sm:table-cell">{{ b.stock|default:0 }}</td>
+          <td class="num">{{ b.units_sold }}</td>
+          <td class="hidden sm:table-cell">{% if b.is_featured %}<span class="badge tone-brand">Destacada</span>{% else %}<span class="text-ink-soft">No</span>{% endif %}</td>
+          <td class="hidden text-right sm:table-cell"><a href="{% url 'dashboard:brand_edit' b.pk %}" class="btn btn-ghost btn-sm">Editar</a></td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

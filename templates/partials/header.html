@@ -1,0 +1,88 @@
+<div class="bg-pine text-surface">
+  <p class="container-page flex h-9 items-center justify-center text-center text-[13px] font-medium">
+    Envío gratis en Ciudad de Panamá desde ${{ STORE.free_shipping_from }}.<span class="hidden sm:inline">&nbsp;Paga con tarjeta, Yappy o ACH.</span>
+  </p>
+</div>
+
+<header class="sticky top-0 z-40 border-b border-line bg-ground" data-header>
+  <div class="container-page">
+    <div class="flex h-16 items-center gap-2 sm:gap-4">
+      <button type="button" class="btn-icon -ml-2 lg:hidden" data-dialog-open="menu-movil" aria-label="Abrir menú" aria-haspopup="dialog">
+        <i class="ph ph-list text-2xl" aria-hidden="true"></i>
+      </button>
+
+      <a href="{% url 'core:home' %}" class="mr-2 shrink-0 text-[22px] leading-none font-semibold tracking-[-0.035em] lg:mr-6" aria-label="Nota Alta, ir al inicio">
+        Nota&nbsp;Alta
+      </a>
+
+      <form action="{% url 'catalog:catalog' %}" method="get" role="search" class="relative hidden max-w-xl flex-1 md:block">
+        <label for="buscar-escritorio" class="sr-only">Buscar perfumes</label>
+        <i class="ph ph-magnifying-glass pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-lg text-ink-soft" aria-hidden="true"></i>
+        <input id="buscar-escritorio" type="search" name="q" value="{{ search_query|default:'' }}" placeholder="Busca por perfume, marca o nota (ej. vainilla)" class="input pl-10" autocomplete="off">
+      </form>
+
+      <nav aria-label="Cuenta y carrito" class="ml-auto flex items-center gap-1">
+        {% if user.is_authenticated and user.is_staff %}
+          <a href="{% url 'dashboard:overview' %}" class="btn btn-ghost btn-sm hidden xl:inline-flex">Panel</a>
+        {% endif %}
+        <a href="{% url 'accounts:profile' %}" class="btn-icon" aria-label="{% if user.is_authenticated %}Mi cuenta{% else %}Iniciar sesión{% endif %}">
+          <i class="ph ph-user text-[22px]" aria-hidden="true"></i>
+        </a>
+        <a href="{% url 'cart:detail' %}" class="btn-icon -mr-2" data-cart-link aria-label="Carrito, {{ cart_count }} artículo{{ cart_count|pluralize }}">
+          <i class="ph ph-handbag text-[22px]" aria-hidden="true"></i>
+          <span data-cart-count class="absolute top-1 right-0.5 grid h-[18px] min-w-[18px] place-items-center rounded-full bg-sale px-1 text-[11px] font-semibold text-white {% if not cart_count %}hidden{% endif %}" aria-hidden="true">{{ cart_count }}</span>
+        </a>
+      </nav>
+    </div>
+
+    <form action="{% url 'catalog:catalog' %}" method="get" role="search" class="relative pb-3 md:hidden">
+      <label for="buscar-movil" class="sr-only">Buscar perfumes</label>
+      <i class="ph ph-magnifying-glass pointer-events-none absolute top-[22px] left-3 -translate-y-1/2 text-lg text-ink-soft" aria-hidden="true"></i>
+      <input id="buscar-movil" type="search" name="q" value="{{ search_query|default:'' }}" placeholder="Busca perfume, marca o nota" class="input pl-10" autocomplete="off">
+    </form>
+
+    <nav aria-label="Principal" class="hidden lg:block">
+      <ul class="-mb-px flex gap-8 text-[15px]">
+        {% for link in nav_links %}
+          <li>
+            <a href="{{ link.url }}" class="inline-flex h-11 items-center border-b-2 transition-colors {% if link.active %}border-pine font-semibold text-ink{% else %}border-transparent text-ink-soft hover:border-line-strong hover:text-ink{% endif %}" {% if link.active %}aria-current="page"{% endif %}>{{ link.label }}</a>
+          </li>
+        {% endfor %}
+        <li class="ml-auto">
+          <a href="{% url 'catalog:catalog' %}?oferta=1" class="inline-flex h-11 items-center gap-1.5 border-b-2 border-transparent font-medium text-sale hover:border-sale/40">
+            <i class="ph ph-tag" aria-hidden="true"></i>Ofertas
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<dialog id="menu-movil" class="sheet sheet-left" aria-label="Menú">
+  <div class="flex h-16 items-center justify-between border-b border-line px-4">
+    <span class="text-xl font-semibold tracking-[-0.035em]">Nota Alta</span>
+    <button type="button" class="btn-icon -mr-2" data-dialog-close aria-label="Cerrar menú"><i class="ph ph-x text-2xl" aria-hidden="true"></i></button>
+  </div>
+  <nav aria-label="Principal (móvil)" class="px-4 py-2">
+    <ul class="divide-y divide-line">
+      {% for link in nav_links %}
+        <li>
+          <a href="{{ link.url }}" class="flex h-14 items-center justify-between text-lg {% if link.active %}font-semibold{% endif %}" {% if link.active %}aria-current="page"{% endif %}>
+            {{ link.label }}<i class="ph ph-caret-right text-ink-soft" aria-hidden="true"></i>
+          </a>
+        </li>
+      {% endfor %}
+      <li>
+        <a href="{% url 'catalog:catalog' %}?oferta=1" class="flex h-14 items-center justify-between text-lg font-medium text-sale">Ofertas<i class="ph ph-caret-right" aria-hidden="true"></i></a>
+      </li>
+    </ul>
+  </nav>
+  <div class="mt-auto border-t border-line p-4 text-sm text-ink-soft">
+    {% if user.is_authenticated %}
+      <a href="{% url 'accounts:profile' %}" class="link">Mi cuenta y pedidos</a>
+      {% if user.is_staff %}<a href="{% url 'dashboard:overview' %}" class="link ml-4">Panel</a>{% endif %}
+    {% else %}
+      <a href="{% url 'accounts:login' %}" class="link">Iniciar sesión</a> <span aria-hidden="true">/</span> <a href="{% url 'accounts:register' %}" class="link">Crear cuenta</a>
+    {% endif %}
+  </div>
+</dialog>

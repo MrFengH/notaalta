@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load store %}
+{% block title %}Pedido {{ order.number }}{% endblock %}
+
+{% block content %}
+<div class="container-page max-w-4xl pt-8">
+  <a href="{% url 'accounts:profile' %}" class="link inline-flex items-center gap-1.5 text-sm"><i class="ph ph-arrow-left" aria-hidden="true"></i>Mis pedidos</a>
+  <div class="mt-4 flex flex-wrap items-center justify-between gap-3">
+    <h1 class="text-4xl font-semibold">Pedido {{ order.number }}</h1>
+    <span class="badge tone-{{ order.status|status_tone }} h-8 px-3 text-sm">{{ order.get_status_display }}</span>
+  </div>
+  <p class="mt-2 text-ink-soft">Realizado el {{ order.created_at|date:"j \d\e F \d\e Y, H:i" }}</p>
+
+  <section class="panel mt-8 p-6" aria-labelledby="track-title">
+    <h2 id="track-title" class="text-lg font-semibold">Seguimiento</h2>
+    {% if order.status == "cancelado" %}
+      <p class="mt-3 flex items-center gap-2 text-danger"><i class="ph ph-x-circle text-xl" aria-hidden="true"></i>Este pedido fue cancelado. Si pagaste, el reembolso se procesa en 5 a 7 días hábiles.</p>
+    {% else %}
+      <ol class="mt-6 grid gap-4 sm:grid-cols-5 sm:gap-2">
+        {% for step in order.timeline %}
+          <li class="flex items-center gap-3 sm:flex-col sm:items-start sm:gap-2" {% if step.current %}aria-current="step"{% endif %}>
+            <span class="flex w-full items-center gap-2">
+              <span class="grid size-7 shrink-0 place-items-center rounded-full {% if step.done %}bg-pine text-surface{% else %}border border-line-strong bg-surface text-ink-soft{% endif %}">
+                {% if step.done %}<i class="ph ph-check text-sm" aria-hidden="true"></i>{% else %}<span class="text-xs">{{ forloop.counter }}</span>{% endif %}
+              </span>
+              {% if not forloop.last %}<span class="hidden h-px flex-1 sm:block {% if step.done %}bg-pine{% else %}bg-line{% endif %}" aria-hidden="true"></span>{% endif %}
+            </span>
+            <span class="text-sm {% if step.current %}font-semibold{% elif not step.done %}text-ink-soft{% endif %}">{{ step.label }}<span class="sr-only">{% if step.done %} (completado){% else %} (pendiente){% endif %}</span></span>
+          </li>
+        {% endfor %}
+      </ol>
+    {% endif %}
+  </section>
+
+  <div class="mt-8 grid gap-8 md:grid-cols-[1fr_300px]">
+    <section aria-labelledby="items-title">
+      <h2 id="items-title" class="text-lg font-semibold">Productos</h2>
+      <ul class="mt-4 divide-y divide-line border-y border-line" role="list">
+        {% for item in order.items.all %}
+          <li class="flex items-center gap-4 py-4">
+            {% if item.product %}<div class="photo-tile aspect-[4/5] w-14 shrink-0"><img src="{{ item.product.image_url }}" alt="" width="112" height="140" loading="lazy"></div>{% endif %}
+            <div class="min-w-0 flex-1">
+              {% if item.product %}<a href="{{ item.product.get_absolute_url }}" class="font-medium hover:underline">{{ item.product_name }}</a>{% else %}<p class="font-medium">{{ item.product_name }}</p>{% endif %}
+              <p class="text-sm text-ink-soft">{{ item.unit_price|money }} × {{ item.quantity }}</p>
+            </div>
+            <p class="price">{{ item.line_total|money }}</p>
+          </li>
+        {% endfor %}
+      </ul>
+      <dl class="mt-4 space-y-2 text-[15px]">
+        <div class="flex justify-between"><dt class="text-ink-soft">Subtotal</dt><dd>{{ order.subtotal|money }}</dd></div>
+        {% if order.discount %}<div class="flex justify-between text-sale"><dt>Cupón {{ order.coupon_code }}</dt><dd>-{{ order.discount|money }}</dd></div>{% endif %}
+        <div class="flex justify-between"><dt class="text-ink-soft">Envío</dt><dd>{% if order.shipping_cost %}{{ order.shipping_cost|money }}{% else %}Gratis{% endif %}</dd></div>
+        <div class="flex justify-between border-t border-line pt-3 font-semibold"><dt>Total</dt><dd class="price text-xl">{{ order.total|money }}</dd></div>
+      </dl>
+    </section>
+    <aside class="space-y-6 text-sm">
+      <div><h2 class="font-semibold">Entrega</h2><p class="mt-1">{{ order.get_shipping_method_display }}</p>
+        {% if order.shipping_method != "retiro" %}<p class="mt-1 text-ink-soft">{{ order.full_name }}<br>{{ order.address }}<br>{{ order.district }}, {{ order.get_province_display }}</p>{% endif %}</div>
+      <div><h2 class="font-semibold">Pago</h2><p class="mt-1">{{ order.get_payment_method_display }}</p></div>
+      <div><h2 class="font-semibold">¿Algún problema?</h2><p class="mt-1 text-ink-soft">Escríbenos citando {{ order.number }}.</p><a href="{% url 'core:contact' %}" class="link mt-1 inline-block">Contactar a la tienda</a></div>
+    </aside>
+  </div>
+</div>
+{% endblock %}

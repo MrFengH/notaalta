@@ -1,0 +1,98 @@
+{% load store %}
+{% comment %}Formulario de filtros. `idp` evita IDs duplicados entre la versión de escritorio y la del panel móvil.{% endcomment %}
+<form method="get" class="text-[15px]" {% if autosubmit %}data-autosubmit{% endif %} aria-label="Filtros">
+  {% if filter.q %}<input type="hidden" name="q" value="{{ filter.q }}">{% endif %}
+  <input type="hidden" name="orden" value="{{ filter.sort }}">
+
+  {% if not category and not brand %}
+  <fieldset class="border-b border-line pb-5">
+    <legend class="mb-3 text-sm font-semibold">Categoría</legend>
+    <ul class="space-y-1.5">
+      {% for c in nav_categories %}
+        <li><a href="{{ c.get_absolute_url }}{% query %}" class="text-ink-soft hover:text-ink hover:underline hover:underline-offset-4">{{ c.name }}</a></li>
+      {% endfor %}
+    </ul>
+  </fieldset>
+  {% endif %}
+
+  <fieldset class="border-b border-line py-5 {% if category or brand %}pt-0{% endif %}">
+    <legend class="mb-3 text-sm font-semibold">Precio</legend>
+    <ul class="space-y-1.5">
+      {% for p in filter.price_presets %}
+        <li>
+          <a href="{% query precio_min=p.min precio_max=p.max %}" class="inline-flex items-center gap-2 {% if p.checked %}font-semibold text-ink{% else %}text-ink-soft hover:text-ink{% endif %}" {% if p.checked %}aria-current="true"{% endif %}>
+            <span class="grid size-4 place-items-center rounded-full border {% if p.checked %}border-pine{% else %}border-line-strong{% endif %}" aria-hidden="true">{% if p.checked %}<span class="size-2 rounded-full bg-pine"></span>{% endif %}</span>{{ p.label }}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+    <div class="mt-4 flex items-end gap-2">
+      <div class="flex-1">
+        <label for="{{ idp }}-min" class="mb-1 block text-xs text-ink-soft">Mínimo ($)</label>
+        <input id="{{ idp }}-min" type="number" name="precio_min" min="0" step="1" inputmode="numeric" value="{{ request.GET.precio_min }}" class="input h-10 px-2.5 text-[15px]">
+      </div>
+      <div class="flex-1">
+        <label for="{{ idp }}-max" class="mb-1 block text-xs text-ink-soft">Máximo ($)</label>
+        <input id="{{ idp }}-max" type="number" name="precio_max" min="0" step="1" inputmode="numeric" value="{{ request.GET.precio_max }}" class="input h-10 px-2.5 text-[15px]">
+      </div>
+      <button type="submit" class="btn btn-secondary h-10 px-3 text-sm">Aplicar</button>
+    </div>
+  </fieldset>
+
+  {% if not hide_brand_filter %}
+  {% with facets=filter.brand_facets %}{% if facets %}
+  <fieldset class="border-b border-line py-5">
+    <legend class="mb-3 text-sm font-semibold">Marca</legend>
+    <ul class="space-y-2">
+      {% for b in facets %}
+        <li>
+          <label class="flex items-center gap-2.5 {% if not b.count %}opacity-50{% endif %}">
+            <input type="checkbox" name="marca" value="{{ b.slug }}" class="checkbox" {% if b.checked %}checked{% endif %}>
+            <span class="flex-1">{{ b.name }}</span><span class="text-sm text-ink-soft">{{ b.count }}</span>
+          </label>
+        </li>
+      {% endfor %}
+    </ul>
+  </fieldset>
+  {% endif %}{% endwith %}
+  {% endif %}
+
+  {% with facets=filter.family_facets %}{% if facets %}
+  <fieldset class="border-b border-line py-5">
+    <legend class="mb-3 text-sm font-semibold">Familia olfativa</legend>
+    <ul class="space-y-2">
+      {% for f in facets %}
+        <li><label class="flex items-center gap-2.5"><input type="checkbox" name="familia" value="{{ f.value }}" class="checkbox" {% if f.checked %}checked{% endif %}><span class="flex-1">{{ f.label }}</span><span class="text-sm text-ink-soft">{{ f.count }}</span></label></li>
+      {% endfor %}
+    </ul>
+  </fieldset>
+  {% endif %}{% endwith %}
+
+  {% with facets=filter.concentration_facets %}{% if facets|length > 1 %}
+  <fieldset class="border-b border-line py-5">
+    <legend class="mb-3 text-sm font-semibold">Concentración</legend>
+    <ul class="space-y-2">
+      {% for f in facets %}
+        <li><label class="flex items-center gap-2.5"><input type="checkbox" name="concentracion" value="{{ f.value }}" class="checkbox" {% if f.checked %}checked{% endif %}><span class="flex-1">{{ f.label }}</span><span class="text-sm text-ink-soft">{{ f.count }}</span></label></li>
+      {% endfor %}
+    </ul>
+  </fieldset>
+  {% endif %}{% endwith %}
+
+  <fieldset class="py-5">
+    <legend class="sr-only">Disponibilidad y ofertas</legend>
+    <div class="space-y-2">
+      <label class="flex items-center gap-2.5"><input type="checkbox" name="oferta" value="1" class="checkbox" {% if filter.on_sale %}checked{% endif %}>Solo con descuento</label>
+      <label class="flex items-center gap-2.5"><input type="checkbox" name="disponible" value="1" class="checkbox" {% if filter.available %}checked{% endif %}>Solo disponibles</label>
+    </div>
+  </fieldset>
+
+  {% if not autosubmit %}
+  <div class="sticky bottom-0 -mx-4 flex gap-3 border-t border-line bg-ground px-4 py-4">
+    <a href="?{% if filter.q %}q={{ filter.q|urlencode }}{% endif %}" class="btn btn-secondary flex-1">Limpiar</a>
+    <button type="submit" class="btn btn-primary flex-[2]">Aplicar filtros</button>
+  </div>
+  {% else %}
+  <noscript><button type="submit" class="btn btn-primary btn-block">Aplicar filtros</button></noscript>
+  {% endif %}
+</form>

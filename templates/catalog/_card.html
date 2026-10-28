@@ -1,0 +1,44 @@
+{% load store %}
+<article class="product-card group relative flex flex-col">
+  <a href="{{ product.get_absolute_url }}" class="photo-mat block aspect-[4/5]" tabindex="-1" aria-hidden="true">
+    <img src="{{ product.image_url }}" alt="" width="800" height="1000" loading="lazy" decoding="async" class="">
+    <span class="absolute top-3 left-3 flex flex-col items-start gap-1.5">
+      {% if not product.in_stock %}
+        <span class="badge bg-ink text-surface">Agotado</span>
+      {% elif product.on_sale %}
+        <span class="badge badge-sale">-{{ product.discount_percent }}%</span>
+      {% endif %}
+    </span>
+  </a>
+
+  <div class="mt-3 flex flex-1 flex-col">
+    <p class="text-[13px] text-ink-soft">{{ product.brand.name }}</p>
+    <h3 class="mt-0.5 text-[15px] leading-snug font-semibold sm:text-base">
+      <a href="{{ product.get_absolute_url }}" class="hover:underline hover:decoration-1 hover:underline-offset-4">{{ product.name }}</a>
+    </h3>
+    <p class="mt-1 line-clamp-2 text-sm leading-relaxed text-ink-soft">{{ product.short_description }}</p>
+    <p class="mt-1.5 text-[13px] text-ink-soft">{{ product.spec_line }}</p>
+
+    {% with coupon=coupons|lookup:product.brand_id %}{% if coupon %}
+      <p class="mt-2"><span class="badge badge-coupon"><i class="ph ph-ticket" aria-hidden="true"></i>Cupón {{ coupon.code }}: {{ coupon.percent_off }}% extra</span></p>
+    {% endif %}{% endwith %}
+
+    <div class="mt-auto pt-3">
+      <p class="flex flex-wrap items-baseline gap-x-2">
+        <span class="price text-lg {% if product.on_sale %}text-sale{% endif %}"><span class="sr-only">Precio: </span>{{ product.price|money }}</span>
+        {% if product.on_sale %}<span class="price-old text-sm"><span class="sr-only">Antes: </span>{{ product.compare_at_price|money }}</span>{% endif %}
+      </p>
+      <form method="post" action="{% url 'cart:add' product.pk %}" class="mt-3" data-add-to-cart>
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+        {% if product.in_stock %}
+          <button type="submit" class="btn btn-secondary btn-sm btn-block" aria-label="Agregar {{ product.brand.name }} {{ product.name }} al carrito">
+            <i class="ph ph-handbag" aria-hidden="true"></i>Agregar
+          </button>
+        {% else %}
+          <button type="button" class="btn btn-secondary btn-sm btn-block" disabled>Agotado</button>
+        {% endif %}
+      </form>
+    </div>
+  </div>
+</article>

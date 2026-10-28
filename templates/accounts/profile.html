@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% load store %}
+{% block title %}Mi cuenta{% endblock %}
+
+{% block content %}
+<div class="container-page pt-8">
+  <div class="flex flex-wrap items-end justify-between gap-4">
+    <div>
+      <h1 class="text-4xl font-semibold sm:text-5xl">Hola, {{ user.first_name|default:user.email }}</h1>
+      <p class="mt-2 text-ink-soft">{{ user.email }}</p>
+    </div>
+    <form method="post" action="{% url 'accounts:logout' %}">{% csrf_token %}<button type="submit" class="btn btn-ghost btn-sm"><i class="ph ph-sign-out" aria-hidden="true"></i>Cerrar sesión</button></form>
+  </div>
+
+  <dl class="mt-8 grid grid-cols-3 gap-px overflow-hidden rounded-sm border border-line bg-line">
+    <div class="bg-surface p-4 sm:p-5"><dt class="text-sm text-ink-soft">Pedidos</dt><dd class="mt-1 text-2xl font-semibold">{{ orders|length }}</dd></div>
+    <div class="bg-surface p-4 sm:p-5"><dt class="text-sm text-ink-soft">En curso</dt><dd class="mt-1 text-2xl font-semibold">{{ open_orders }}</dd></div>
+    <div class="bg-surface p-4 sm:p-5"><dt class="text-sm text-ink-soft">Total comprado</dt><dd class="mt-1 text-2xl font-semibold">{{ spent|money }}</dd></div>
+  </dl>
+
+  <div class="mt-12 grid gap-12 lg:grid-cols-12">
+    <section class="lg:col-span-7" aria-labelledby="orders-title">
+      <h2 id="orders-title" class="text-2xl font-semibold">Mis pedidos</h2>
+      {% if orders %}
+      <ul class="mt-5 divide-y divide-line border-y border-line" role="list">
+        {% for order in orders %}
+          <li class="relative flex flex-wrap items-center gap-x-4 gap-y-2 py-4 transition-colors hover:bg-surface sm:px-2">
+            <div class="min-w-0 flex-1">
+              <a href="{{ order.get_absolute_url }}" class="font-semibold after:absolute after:inset-0">{{ order.number }}</a>
+              <p class="text-sm text-ink-soft">{{ order.created_at|date:"j \d\e F, Y" }} · {{ order.item_count }} artículo{{ order.item_count|pluralize }}</p>
+            </div>
+            <span class="badge tone-{{ order.status|status_tone }}">{{ order.get_status_display }}</span>
+            <span class="price w-24 text-right">{{ order.total|money }}</span>
+            <i class="ph ph-caret-right text-ink-soft" aria-hidden="true"></i>
+          </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+        <div class="mt-5 rounded-sm border border-dashed border-line-strong bg-surface p-8 text-center">
+          <p class="font-semibold">Aún no tienes pedidos</p>
+          <p class="mt-1 text-sm text-ink-soft">Cuando compres, verás aquí el estado de cada envío.</p>
+          <a href="{% url 'catalog:catalog' %}" class="btn btn-primary mt-5">Comprar perfumes</a>
+        </div>
+      {% endif %}
+    </section>
+
+    <section class="lg:col-span-5" aria-labelledby="data-title">
+      <div class="flex items-center justify-between">
+        <h2 id="data-title" class="text-2xl font-semibold">Mis datos</h2>
+        {% if not editing %}<a href="?editar=1#data-title" class="btn btn-secondary btn-sm"><i class="ph ph-pencil-simple" aria-hidden="true"></i>Editar</a>{% endif %}
+      </div>
+      {% if editing %}
+        <form method="post" class="panel mt-5 grid gap-5 p-5 sm:grid-cols-2" novalidate>
+          {% csrf_token %}
+          {% include "partials/field.html" with field=user_form.first_name %}
+          {% include "partials/field.html" with field=user_form.last_name %}
+          {% include "partials/field.html" with field=user_form.email class="sm:col-span-2" %}
+          {% include "partials/field.html" with field=profile_form.phone class="sm:col-span-2" %}
+          {% include "partials/field.html" with field=profile_form.province %}
+          {% include "partials/field.html" with field=profile_form.district %}
+          {% include "partials/field.html" with field=profile_form.address class="sm:col-span-2" %}
+          {% include "partials/field.html" with field=profile_form.reference class="sm:col-span-2" %}
+          <div class="flex gap-3 sm:col-span-2">
+            <button type="submit" class="btn btn-primary">Guardar cambios</button>
+            <a href="{% url 'accounts:profile' %}" class="btn btn-ghost">Cancelar</a>
+          </div>
+        </form>
+      {% else %}
+        {% with p=user.profile %}
+        <dl class="panel mt-5 divide-y divide-line text-[15px]">
+          <div class="grid grid-cols-[120px_1fr] gap-3 p-4"><dt class="text-ink-soft">Nombre</dt><dd>{{ user.get_full_name|default:"Sin completar" }}</dd></div>
+          <div class="grid grid-cols-[120px_1fr] gap-3 p-4"><dt class="text-ink-soft">Teléfono</dt><dd>{{ p.phone|default:"Sin completar" }}</dd></div>
+          <div class="grid grid-cols-[120px_1fr] gap-3 p-4"><dt class="text-ink-soft">Dirección</dt><dd>{% if p.address %}{{ p.address }}<br>{{ p.district }}, {{ p.get_province_display }}{% if p.reference %}<br><span class="text-ink-soft">{{ p.reference }}</span>{% endif %}{% else %}Sin completar{% endif %}</dd></div>
+        </dl>
+        {% endwith %}
+      {% endif %}
+    </section>
+  </div>
+</div>
+{% endblock %}

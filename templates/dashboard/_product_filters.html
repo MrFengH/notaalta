@@ -1,0 +1,24 @@
+<form method="get" class="flex flex-wrap items-end gap-2" role="search" aria-label="Filtrar productos">
+  <div class="w-full sm:w-64">
+    <label for="pq" class="sr-only">Buscar</label>
+    <input id="pq" type="search" name="q" value="{{ filters.q }}" class="input h-10" placeholder="Nombre o marca">
+  </div>
+  <label for="pmarca" class="sr-only">Marca</label>
+  <select id="pmarca" name="marca" class="select h-10 w-auto">
+    <option value="">Todas las marcas</option>
+    {% for b in brands %}<option value="{{ b.slug }}" {% if filters.brand == b.slug %}selected{% endif %}>{{ b.name }}</option>{% endfor %}
+  </select>
+  <label for="pcat" class="sr-only">Categoría</label>
+  <select id="pcat" name="categoria" class="select h-10 w-auto">
+    <option value="">Todas las categorías</option>
+    {% for c in categories %}<option value="{{ c.slug }}" {% if filters.category == c.slug %}selected{% endif %}>{{ c.name }}</option>{% endfor %}
+  </select>
+  <label for="pstock" class="sr-only">Stock</label>
+  <select id="pstock" name="stock" class="select h-10 w-auto">
+    <option value="">Cualquier stock</option>
+    <option value="bajo" {% if filters.stock == "bajo" %}selected{% endif %}>Stock bajo (1 a 5)</option>
+    <option value="agotado" {% if filters.stock == "agotado" %}selected{% endif %}>Agotados</option>
+  </select>
+  <button class="btn btn-secondary h-10">Filtrar</button>
+  {% if filters.q or filters.brand or filters.category or filters.stock %}<a href="?" class="link ml-1 text-sm">Limpiar</a>{% endif %}
+</form>

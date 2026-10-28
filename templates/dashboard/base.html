@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}{% block dash_title %}Panel{% endblock %} · Panel{% endblock %}
+{% block body_class %}min-h-dvh bg-ground{% endblock %}
+
+{% block chrome_top %}
+<aside class="fixed inset-y-0 left-0 z-30 hidden w-60 flex-col border-r border-line bg-surface lg:flex" aria-label="Panel">
+  {% include "dashboard/_nav.html" %}
+</aside>
+<header class="sticky top-0 z-20 flex h-14 items-center gap-2 border-b border-line bg-surface px-4 lg:hidden">
+  <button type="button" class="btn-icon -ml-2" data-dialog-open="dash-menu" aria-label="Abrir menú del panel" aria-haspopup="dialog"><i class="ph ph-list text-2xl" aria-hidden="true"></i></button>
+  <span class="font-semibold tracking-[-0.03em]">Nota Alta · Panel</span>
+</header>
+<dialog id="dash-menu" class="sheet sheet-left bg-surface" aria-label="Menú del panel">
+  <button type="button" class="btn-icon absolute top-3 right-3" data-dialog-close aria-label="Cerrar menú"><i class="ph ph-x text-2xl" aria-hidden="true"></i></button>
+  {% include "dashboard/_nav.html" %}
+</dialog>
+{% endblock %}
+
+{% block content %}
+<div class="lg:pl-60">
+  <div class="mx-auto max-w-[1400px] px-4 py-6 sm:px-6 lg:px-10 lg:py-8">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        {% block crumbs %}{% endblock %}
+        <h1 class="text-2xl font-semibold sm:text-3xl">{% block heading %}{% endblock %}</h1>
+        {% block subheading %}{% endblock %}
+      </div>
+      <div class="flex flex-wrap gap-2">{% block actions %}{% endblock %}</div>
+    </div>
+    <div class="mt-6">{% block dash %}{% endblock %}</div>
+  </div>
+</div>
+{% endblock %}
+
+{% block chrome_bottom %}{% endblock %}

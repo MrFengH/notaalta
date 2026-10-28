@@ -1,0 +1,201 @@
+@import "tailwindcss";
+
+@source "../../templates";
+@source "../../apps";
+@source "../js";
+
+/* ---------------------------------------------------------------------------
+   Tokens de Nota Alta
+   Fondo niebla fría, tinta y campo pino; caqui reservado para rebajas.
+   Una sola escala de esquinas: 2px (rounded-sm) en controles, tarjetas e imágenes.
+--------------------------------------------------------------------------- */
+@theme {
+  --font-sans: "Schibsted Grotesk", ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+
+  --color-ground: #f1f2ee;
+  --color-surface: #fafaf8;
+  --color-sage: #e4e8e1;
+  --color-line: #d5dad2;
+  --color-line-strong: #7e8983;
+  --color-ink: #1c2622;
+  --color-ink-soft: #56625c;
+  --color-ink-faint: #6b7770;
+  --color-pine: #23463c;
+  --color-pine-deep: #183229;
+  --color-pine-tint: #dce7e1;
+  --color-on-pine-soft: #c9d8d0;
+  --color-sale: #b8431f;
+  --color-sale-deep: #a63b1a;
+  --color-sale-tint: #f6e3da;
+
+  --color-warn: #7a4e00;
+  --color-warn-tint: #fbefd6;
+  --color-danger: #a1271b;
+  --color-danger-tint: #fde7e4;
+  --color-info: #284866;
+  --color-info-tint: #e3ebf3;
+  --color-success: #1f5137;
+  --color-success-tint: #ddefe3;
+
+  --radius-sm: 2px;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --shadow-float: 0 6px 16px -6px rgb(28 38 34 / 0.2), 0 1px 3px rgb(28 38 34 / 0.08);
+
+  --animate-reveal: reveal 1100ms var(--ease-out-expo) both;
+  --animate-rise: rise 700ms var(--ease-out-expo) both;
+
+  @keyframes reveal {
+    from { clip-path: inset(18% 0 0 0); transform: scale(1.06); }
+    to { clip-path: inset(0 0 0 0); transform: scale(1); }
+  }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Base y superficies del navegador
+--------------------------------------------------------------------------- */
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    scrollbar-color: var(--color-line-strong) var(--color-ground);
+  }
+  body {
+    @apply bg-ground font-sans text-ink antialiased;
+    font-feature-settings: "ss01";
+  }
+  ::selection { background: var(--color-pine); color: var(--color-surface); }
+  :focus-visible { outline: 2px solid var(--color-pine); outline-offset: 2px; }
+  h1, h2, h3 { text-wrap: balance; letter-spacing: -0.02em; }
+  p { text-wrap: pretty; }
+  a, button, [role="button"], label[for], summary { cursor: pointer; touch-action: manipulation; }
+  [hidden] { display: none !important; }
+  input, textarea { caret-color: var(--color-pine); }
+  /* La leyenda flota dentro del padding del fieldset en lugar de cortar el borde superior */
+  fieldset > legend:not(.sr-only) { float: left; width: 100%; }
+  fieldset > legend + * { clear: both; }
+}
+
+@keyframes sheet-in {
+  from { transform: translateX(var(--sheet-from, -100%)); }
+  to { transform: translateX(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 1ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Componentes compartidos (tienda y panel)
+--------------------------------------------------------------------------- */
+@layer components {
+  .container-page { @apply mx-auto w-full max-w-[1360px] px-4 sm:px-6 lg:px-10; }
+
+  .skip-link {
+    @apply sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:rounded-sm focus:bg-pine focus:px-4 focus:py-2 focus:text-surface;
+  }
+
+  /* Botones */
+  .btn {
+    @apply inline-flex h-11 items-center justify-center gap-2 rounded-sm px-5 text-[15px] font-medium whitespace-nowrap
+      transition-[background-color,color,border-color,transform] duration-200 ease-(--ease-out-expo)
+      active:translate-y-px disabled:pointer-events-none disabled:opacity-45 aria-disabled:pointer-events-none aria-disabled:opacity-45;
+  }
+  .btn-primary { @apply bg-pine text-surface hover:bg-pine-deep; }
+  .btn-secondary { @apply border border-line-strong bg-surface text-ink hover:border-ink hover:bg-white; }
+  .btn-ghost { @apply text-ink hover:bg-sage; }
+  .btn-on-pine { @apply bg-surface text-pine hover:bg-white; }
+  .btn-danger { @apply border border-danger/40 bg-surface text-danger hover:bg-danger-tint; }
+  .btn-sm { @apply h-9 px-3.5 text-sm; }
+  .btn-block { @apply w-full; }
+  .btn-icon {
+    @apply relative inline-flex size-11 items-center justify-center rounded-sm text-ink transition-colors duration-200 hover:bg-sage;
+  }
+
+  .link { @apply underline decoration-ink/30 decoration-1 underline-offset-4 transition-colors hover:decoration-ink; }
+
+  /* Formularios */
+  .label { @apply mb-1.5 block text-sm font-medium text-ink; }
+  .input, .select {
+    @apply block h-11 w-full rounded-sm border border-line-strong bg-white px-3 text-base text-ink transition-[border-color,box-shadow]
+      placeholder:text-ink-faint hover:border-ink focus:border-pine focus:ring-3 focus:ring-pine/20 focus:outline-none
+      aria-invalid:border-danger aria-invalid:focus:ring-danger/20;
+  }
+  textarea.input { @apply h-auto py-2.5 leading-relaxed; }
+  .select {
+    @apply appearance-none pr-10;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%231c2622' stroke-width='1.6' viewBox='0 0 16 16'%3E%3Cpath d='m4 6 4 4 4-4'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+  }
+  .checkbox { @apply size-[18px] shrink-0 rounded-sm accent-pine; }
+  .help { @apply mt-1.5 text-sm text-ink-soft; }
+  .field-error { @apply mt-1.5 flex items-start gap-1.5 text-sm font-medium text-danger; }
+  .file-input {
+    @apply block w-full text-sm text-ink-soft file:mr-3 file:h-10 file:cursor-pointer file:rounded-sm file:border file:border-line-strong file:bg-surface file:px-4 file:text-sm file:font-medium file:text-ink hover:file:border-ink;
+  }
+
+  /* Opción seleccionable (envío, pago) */
+  .choice {
+    @apply relative flex cursor-pointer gap-3 rounded-sm border border-line bg-white p-4 transition-colors
+      hover:border-line-strong has-[:checked]:border-pine has-[:checked]:bg-pine-tint/50 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-pine;
+  }
+  .choice input { @apply mt-0.5 size-[18px] shrink-0 accent-pine; }
+
+  /* Etiquetas */
+  .badge { @apply inline-flex h-6 items-center gap-1 rounded-sm px-2 text-xs font-semibold whitespace-nowrap; }
+  .badge-sale { @apply bg-sale text-white; }
+  .badge-coupon { @apply border border-dashed border-sale/60 bg-sale-tint text-sale-deep; }
+  .tone-neutral { @apply bg-sage text-ink; }
+  .tone-brand { @apply bg-pine-tint text-pine; }
+  .tone-warn { @apply bg-warn-tint text-warn; }
+  .tone-danger { @apply bg-danger-tint text-danger; }
+  .tone-info { @apply bg-info-tint text-info; }
+  .tone-success { @apply bg-success-tint text-success; }
+
+  /* Panel lateral sobre <dialog> (menú móvil y filtros) */
+  .sheet {
+    @apply m-0 h-dvh max-h-dvh w-[min(88vw,400px)] max-w-none flex-col overflow-y-auto border-0 bg-ground p-0 text-ink shadow-(--shadow-float);
+  }
+  .sheet[open] { @apply flex; animation: sheet-in 380ms var(--ease-out-expo); }
+  .sheet-left { @apply mr-auto; }
+  .sheet-right { @apply ml-auto; --sheet-from: 100%; }
+  .sheet::backdrop { background: rgb(28 38 34 / 0.45); }
+
+  /* Avisos */
+  .toast {
+    @apply pointer-events-auto flex w-full max-w-sm items-start gap-3 rounded-sm bg-white px-4 py-3 text-[15px] leading-snug text-ink shadow-(--shadow-float);
+    animation: rise 420ms var(--ease-out-expo) both;
+  }
+  .toast[data-leaving] { opacity: 0; transform: translateY(6px); transition: opacity 200ms, transform 200ms; }
+
+  .price { @apply font-semibold; }
+  .price-old { @apply text-ink-soft line-through decoration-1; }
+
+  .panel { @apply rounded-sm border border-line bg-surface; }
+
+  /* Foto de producto sobre baldosa salvia */
+  .photo-tile { @apply relative overflow-hidden rounded-sm bg-sage; }
+  .photo-tile img { @apply size-full object-cover; }
+  /* Paspartú: la foto de producto se asienta dentro de la baldosa salvia, igual en todas las rejillas */
+  .photo-mat { @apply relative overflow-hidden rounded-sm bg-sage p-[7%]; }
+  .photo-mat img { @apply size-full rounded-sm object-cover; }
+
+  /* Tablas del panel */
+  .data-table { @apply w-full border-collapse text-left text-sm; }
+  .data-table thead th { @apply sticky top-0 border-b border-line bg-surface px-3 py-3 text-xs font-semibold text-ink-soft sm:px-4; }
+  .data-table tbody td { @apply border-b border-line px-3 py-3 align-middle sm:px-4; }
+  /* En pantallas estrechas el estado puede ocupar dos líneas en lugar de recortarse */
+  .data-table .badge { @apply h-auto min-h-6 py-0.5 whitespace-normal sm:whitespace-nowrap; }
+  .data-table tbody tr { @apply transition-colors hover:bg-ground; }
+  .num { @apply text-right whitespace-nowrap; }
+}

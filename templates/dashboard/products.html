@@ -1,0 +1,42 @@
+{% extends "dashboard/base.html" %}
+{% load store %}
+{% block dash_title %}Productos{% endblock %}
+{% block heading %}Productos{% endblock %}
+{% block subheading %}<p class="mt-1 text-sm text-ink-soft">{{ page_obj.paginator.count }} producto{{ page_obj.paginator.count|pluralize }}</p>{% endblock %}
+{% block actions %}<a href="{% url 'dashboard:product_new' %}" class="btn btn-primary btn-sm"><i class="ph ph-plus" aria-hidden="true"></i>Nuevo producto</a>{% endblock %}
+
+{% block dash %}
+{% include "dashboard/_product_filters.html" %}
+<div class="panel mt-4 overflow-x-auto">
+  <table class="data-table">
+    <thead><tr><th scope="col">Producto</th><th scope="col" class="hidden md:table-cell">Categoría</th><th scope="col" class="hidden lg:table-cell">Familia</th><th scope="col" class="num">Precio</th><th scope="col" class="num">Stock</th><th scope="col" class="hidden sm:table-cell">Estado</th><th scope="col"><span class="sr-only">Acciones</span></th></tr></thead>
+    <tbody>
+      {% for p in page_obj %}
+        <tr>
+          <td>
+            <div class="flex items-center gap-3">
+              <div class="photo-tile hidden aspect-[4/5] w-10 shrink-0 sm:block"><img src="{{ p.image_url }}" alt="" width="80" height="100" loading="lazy"></div>
+              <div class="min-w-0"><a href="{% url 'dashboard:product_edit' p.pk %}" class="font-semibold hover:underline">{{ p.name }}</a><span class="block text-xs text-ink-soft">{{ p.brand.name }} · {{ p.spec_line }}</span></div>
+            </div>
+          </td>
+          <td class="hidden md:table-cell">{{ p.category.name }}</td>
+          <td class="hidden lg:table-cell text-ink-soft">{{ p.get_family_display }}</td>
+          <td class="num whitespace-nowrap">
+            <span class="font-medium">{{ p.price|money }}</span>
+            {% if p.on_sale %}<span class="block text-xs text-ink-soft"><s>{{ p.compare_at_price|money }}</s> <span class="text-sale">-{{ p.discount_percent }}%</span></span>{% endif %}
+          </td>
+          <td class="num"><span class="{% if p.stock == 0 %}font-semibold text-danger{% elif p.low_stock %}font-semibold text-warn{% endif %}">{{ p.stock }}</span></td>
+          <td class="hidden sm:table-cell">{% if p.is_active %}<span class="badge tone-success">Publicado</span>{% else %}<span class="badge tone-neutral">Oculto</span>{% endif %}</td>
+          <td class="text-right whitespace-nowrap">
+            <a href="{% url 'dashboard:product_edit' p.pk %}" class="btn btn-ghost btn-sm hidden sm:inline-flex">Editar</a>
+            <a href="{{ p.get_absolute_url }}" class="btn-icon size-9" target="_blank" rel="noopener" aria-label="Ver {{ p.name }} en la tienda (nueva pestaña)"><i class="ph ph-arrow-square-out" aria-hidden="true"></i></a>
+          </td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="7" class="py-12 text-center text-ink-soft">No hay productos con estos filtros.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% include "partials/pagination.html" %}
+{% endblock %}

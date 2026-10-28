@@ -1,0 +1,77 @@
+{% extends "dashboard/base.html" %}
+{% load store %}
+{% block dash_title %}Pedido {{ order.number }}{% endblock %}
+{% block crumbs %}<a href="{% url 'dashboard:orders' %}" class="mb-1 inline-flex items-center gap-1 text-sm text-ink-soft hover:text-ink"><i class="ph ph-arrow-left" aria-hidden="true"></i>Pedidos</a>{% endblock %}
+{% block heading %}Pedido {{ order.number }} <span class="badge tone-{{ order.status|status_tone }} ml-2 h-7 align-middle text-sm">{{ order.get_status_display }}</span>{% endblock %}
+{% block subheading %}<p class="mt-1 text-sm text-ink-soft">{{ order.created_at|date:"l j \d\e F \d\e Y, H:i" }}</p>{% endblock %}
+
+{% block dash %}
+<div class="grid gap-6 xl:grid-cols-3">
+  <div class="min-w-0 space-y-6 xl:col-span-2">
+    <section class="panel overflow-hidden" aria-labelledby="items-title">
+      <h2 id="items-title" class="px-5 pt-5 pb-3 font-semibold">Artículos</h2>
+      <div class="overflow-x-auto">
+        <table class="data-table">
+          <thead><tr><th scope="col">Producto</th><th scope="col" class="num hidden sm:table-cell">Precio</th><th scope="col" class="num">Cant.</th><th scope="col" class="num">Subtotal</th></tr></thead>
+          <tbody>
+            {% for item in order.items.all %}
+              <tr>
+                <td><div class="flex items-center gap-3">
+                  {% if item.product %}<div class="photo-tile aspect-[4/5] w-10 shrink-0"><img src="{{ item.product.image_url }}" alt="" width="80" height="100" loading="lazy"></div>{% endif %}
+                  <span>{{ item.product_name }}</span></div></td>
+                <td class="num hidden sm:table-cell">{{ item.unit_price|money }}</td>
+                <td class="num">{{ item.quantity }}</td>
+                <td class="num font-medium">{{ item.line_total|money }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <dl class="ml-auto max-w-xs space-y-2 p-5 text-sm">
+        <div class="flex justify-between"><dt class="text-ink-soft">Subtotal</dt><dd>{{ order.subtotal|money }}</dd></div>
+        {% if order.discount %}<div class="flex justify-between"><dt class="text-ink-soft">Cupón {{ order.coupon_code }}</dt><dd class=" text-sale">-{{ order.discount|money }}</dd></div>{% endif %}
+        <div class="flex justify-between"><dt class="text-ink-soft">Envío</dt><dd>{{ order.shipping_cost|money }}</dd></div>
+        <div class="flex justify-between border-t border-line pt-2 text-base font-semibold"><dt>Total</dt><dd>{{ order.total|money }}</dd></div>
+      </dl>
+    </section>
+
+    <section class="panel grid gap-6 p-5 text-sm sm:grid-cols-3" aria-label="Cliente, entrega y pago">
+      <div>
+        <h2 class="font-semibold">Cliente</h2>
+        <p class="mt-2">{% if order.user %}<a href="{% url 'dashboard:customer' order.user.pk %}" class="link">{{ order.full_name }}</a>{% else %}{{ order.full_name }} <span class="text-ink-soft">(invitado)</span>{% endif %}</p>
+        <p class="text-ink-soft">{{ order.email }}</p>
+        <p class="text-ink-soft">{{ order.phone }}</p>
+      </div>
+      <div>
+        <h2 class="font-semibold">Entrega</h2>
+        <p class="mt-2">{{ order.get_shipping_method_display }}</p>
+        <p class="text-ink-soft">{{ order.address }}<br>{{ order.district }}, {{ order.get_province_display }}{% if order.reference %}<br>Ref.: {{ order.reference }}{% endif %}</p>
+      </div>
+      <div>
+        <h2 class="font-semibold">Pago</h2>
+        <p class="mt-2">{{ order.get_payment_method_display }}</p>
+      </div>
+    </section>
+  </div>
+
+  <section class="panel h-fit p-5" aria-labelledby="status-title">
+    <h2 id="status-title" class="font-semibold">Actualizar pedido</h2>
+    <form method="post" class="mt-4 space-y-4">
+      {% csrf_token %}
+      {% include "partials/field.html" with field=form.status %}
+      {% include "partials/field.html" with field=form.notes %}
+      <button type="submit" class="btn btn-primary btn-block">Guardar</button>
+    </form>
+    {% if order.status != "cancelado" %}
+    <ol class="mt-6 space-y-3 border-t border-line pt-5 text-sm" aria-label="Progreso">
+      {% for step in order.timeline %}
+        <li class="flex items-center gap-3 {% if not step.done %}text-ink-soft{% endif %}" {% if step.current %}aria-current="step"{% endif %}>
+          <span class="grid size-6 place-items-center rounded-full {% if step.done %}bg-pine text-surface{% else %}border border-line-strong{% endif %}">{% if step.done %}<i class="ph ph-check text-xs" aria-hidden="true"></i>{% endif %}</span>
+          <span class="{% if step.current %}font-semibold{% endif %}">{{ step.label }}</span>
+        </li>
+      {% endfor %}
+    </ol>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Contacto{% endblock %}
+
+{% block content %}
+<div class="container-page grid gap-12 pt-10 lg:grid-cols-12">
+  <div class="lg:col-span-5">
+    <h1 class="text-4xl font-semibold sm:text-5xl">Contacto</h1>
+    <p class="mt-4 max-w-[46ch] text-lg leading-relaxed text-ink-soft">¿Dudas con un pedido o buscas una recomendación? Respondemos por correo en menos de un día hábil.</p>
+
+    <ul class="mt-10 space-y-6 text-[15px]">
+      <li class="flex gap-4"><i class="ph ph-envelope-simple mt-0.5 text-2xl text-pine" aria-hidden="true"></i><div><p class="font-semibold">Correo</p><a href="mailto:{{ STORE.email }}" class="link">{{ STORE.email }}</a></div></li>
+      <li class="flex gap-4"><i class="ph ph-phone mt-0.5 text-2xl text-pine" aria-hidden="true"></i><div><p class="font-semibold">Teléfono</p><p class="text-ink-soft">{{ STORE.phone }}</p></div></li>
+      <li class="flex gap-4"><i class="ph ph-clock mt-0.5 text-2xl text-pine" aria-hidden="true"></i><div><p class="font-semibold">Horario de atención</p><p class="text-ink-soft">Lunes a sábado, de 9:00 a 18:00</p></div></li>
+      <li class="flex gap-4"><i class="ph ph-package mt-0.5 text-2xl text-pine" aria-hidden="true"></i><div><p class="font-semibold">Sobre un pedido</p><p class="text-ink-soft">Incluye el número (por ejemplo, NA-00012) para ubicarlo rápido.</p></div></li>
+    </ul>
+  </div>
+
+  <div class="lg:col-span-6 lg:col-start-7">
+    <form method="post" class="panel grid gap-5 p-6 sm:p-8" novalidate>
+      {% csrf_token %}
+      <h2 class="text-xl font-semibold">Envíanos un mensaje</h2>
+      <div class="grid gap-5 sm:grid-cols-2">
+        {% include "partials/field.html" with field=form.name %}
+        {% include "partials/field.html" with field=form.email %}
+      </div>
+      {% include "partials/field.html" with field=form.topic %}
+      {% include "partials/field.html" with field=form.message %}
+      <button type="submit" class="btn btn-primary justify-self-start">Enviar mensaje</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

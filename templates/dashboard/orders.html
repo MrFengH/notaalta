@@ -1,0 +1,53 @@
+{% extends "dashboard/base.html" %}
+{% load store %}
+{% block dash_title %}Pedidos{% endblock %}
+{% block heading %}Pedidos{% endblock %}
+
+{% block dash %}
+<nav aria-label="Filtrar por estado" class="-mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
+  <ul class="flex min-w-max gap-1 border-b border-line text-sm">
+    {% for t in tabs %}
+      <li>
+        <a href="?{% if t.value %}estado={{ t.value }}{% endif %}{% if q %}&amp;q={{ q|urlencode }}{% endif %}" class="-mb-px inline-flex h-11 items-center gap-2 border-b-2 px-3 {% if status == t.value %}border-pine font-semibold text-ink{% else %}border-transparent text-ink-soft hover:text-ink{% endif %}" {% if status == t.value %}aria-current="page"{% endif %}>
+          {{ t.label }}<span class="rounded-sm bg-sage px-1.5 text-xs text-ink">{{ t.count }}</span>
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+</nav>
+
+<form method="get" class="mt-4 flex max-w-md gap-2" role="search">
+  {% if status %}<input type="hidden" name="estado" value="{{ status }}">{% endif %}
+  <label for="q" class="sr-only">Buscar pedidos</label>
+  <input id="q" type="search" name="q" value="{{ q }}" class="input h-10" placeholder="Número (NA-00012), nombre o correo">
+  <button class="btn btn-secondary h-10">Buscar</button>
+</form>
+
+<div class="panel mt-4 overflow-x-auto">
+  <table class="data-table">
+    <thead>
+      <tr><th scope="col">Pedido</th><th scope="col" class="hidden md:table-cell">Fecha</th><th scope="col">Cliente</th><th scope="col" class="num hidden md:table-cell">Artículos</th><th scope="col" class="hidden lg:table-cell">Pago</th><th scope="col" class="hidden lg:table-cell">Envío</th><th scope="col">Estado</th><th scope="col" class="num hidden sm:table-cell">Total</th></tr>
+    </thead>
+    <tbody>
+      {% for o in page_obj %}
+        <tr>
+          <td><a href="{% url 'dashboard:order' o.pk %}" class="font-semibold whitespace-nowrap hover:underline">{{ o.number }}</a><span class="block text-xs text-ink-soft sm:hidden">{{ o.total|money }}</span></td>
+          <td class="hidden md:table-cell whitespace-nowrap text-ink-soft">{{ o.created_at|date:"j M Y, H:i" }}</td>
+          <td>
+            <span class="block max-w-28 truncate sm:max-w-52">{% if o.user %}<a href="{% url 'dashboard:customer' o.user.pk %}" class="hover:underline">{{ o.full_name }}</a>{% else %}{{ o.full_name }} <span class="text-xs text-ink-soft">(invitado)</span>{% endif %}</span>
+            <span class="block max-w-28 truncate text-xs text-ink-soft sm:max-w-52">{{ o.email }}</span>
+          </td>
+          <td class="num hidden md:table-cell">{{ o.units|default:0 }}</td>
+          <td class="hidden lg:table-cell whitespace-nowrap">{{ o.get_payment_method_display }}</td>
+          <td class="hidden lg:table-cell whitespace-nowrap text-ink-soft">{{ o.get_shipping_method_display }}</td>
+          <td><span class="badge tone-{{ o.status|status_tone }}">{{ o.get_status_display }}</span></td>
+          <td class="num hidden font-medium sm:table-cell">{{ o.total|money }}</td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="8" class="py-12 text-center text-ink-soft">No hay pedidos con estos filtros. <a href="{% url 'dashboard:orders' %}" class="link">Ver todos</a></td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% include "partials/pagination.html" %}
+{% endblock %}

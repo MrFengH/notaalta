@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="container-page grid gap-10 py-10 lg:grid-cols-2 lg:gap-16 lg:py-14">
+  <div class="mx-auto w-full max-w-md lg:mx-0 lg:py-6">
+    {% block auth %}{% endblock %}
+  </div>
+  <div class="photo-tile hidden min-h-[560px] lg:block">
+    <img src="{% static 'img/editorial/coleccion-dorada.webp' %}" alt="" width="1000" height="1250" loading="lazy">
+  </div>
+</div>
+{% endblock %}

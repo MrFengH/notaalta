@@ -1,0 +1,41 @@
+{% extends "dashboard/base.html" %}
+{% load store %}
+{% block dash_title %}Clientes{% endblock %}
+{% block heading %}Clientes{% endblock %}
+{% block subheading %}<p class="mt-1 text-sm text-ink-soft">{{ page_obj.paginator.count }} cuenta{{ page_obj.paginator.count|pluralize }} registrada{{ page_obj.paginator.count|pluralize }}. Las compras como invitado aparecen solo en Pedidos.</p>{% endblock %}
+
+{% block dash %}
+<form method="get" class="flex flex-wrap items-end gap-2" role="search">
+  <div class="w-full max-w-sm">
+    <label for="q" class="sr-only">Buscar clientes</label>
+    <input id="q" type="search" name="q" value="{{ q }}" class="input h-10" placeholder="Nombre o correo">
+  </div>
+  <label for="orden" class="sr-only">Ordenar</label>
+  <select id="orden" name="orden" class="select h-10 w-auto">
+    <option value="gasto" {% if sort == "gasto" %}selected{% endif %}>Mayor gasto</option>
+    <option value="reciente" {% if sort == "reciente" %}selected{% endif %}>Compra más reciente</option>
+    <option value="nombre" {% if sort == "nombre" %}selected{% endif %}>Nombre</option>
+  </select>
+  <button class="btn btn-secondary h-10">Aplicar</button>
+</form>
+
+<div class="panel mt-4 overflow-x-auto">
+  <table class="data-table">
+    <thead><tr><th scope="col">Cliente</th><th scope="col" class="hidden md:table-cell">Teléfono</th><th scope="col" class="num hidden sm:table-cell">Pedidos</th><th scope="col" class="num">Comprado</th><th scope="col" class="hidden sm:table-cell">Última compra</th></tr></thead>
+    <tbody>
+      {% for c in page_obj %}
+        <tr>
+          <td><a href="{% url 'dashboard:customer' c.pk %}" class="font-semibold hover:underline">{{ c.get_full_name|default:c.email }}</a><span class="block max-w-44 truncate text-xs text-ink-soft sm:max-w-none">{{ c.email }}</span></td>
+          <td class="hidden md:table-cell whitespace-nowrap text-ink-soft">{{ c.profile.phone|default:"Sin registrar" }}</td>
+          <td class="num hidden sm:table-cell">{{ c.order_count }}</td>
+          <td class="num font-medium">{{ c.spent|default:0|money }}</td>
+          <td class="hidden sm:table-cell whitespace-nowrap text-ink-soft">{% if c.last_order %}{{ c.last_order|date:"j M Y" }}{% else %}Sin compras{% endif %}</td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="5" class="py-12 text-center text-ink-soft">Ningún cliente coincide con “{{ q }}”.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% include "partials/pagination.html" %}
+{% endblock %}
